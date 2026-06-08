@@ -22,77 +22,59 @@
 html,body{height:100%;background:var(--ink);font-family:'Inconsolata',monospace;-webkit-tap-highlight-color:transparent;user-select:none;overflow:hidden}
 .app{height:100dvh;display:flex;flex-direction:column;background:var(--ink);overflow:hidden}
 .app::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999}
-/* top */
 .topbar{padding:calc(var(--safe-t) + 14px) 24px 10px;display:flex;align-items:baseline;justify-content:space-between;flex-shrink:0}
 .topbar-title{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--crust)}
 .topbar-reset{font-size:10px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:4px 0}
-/* pipeline */
 .pipeline{display:flex;align-items:center;padding:4px 20px 16px;flex-shrink:0;overflow-x:auto}
 .pipeline::-webkit-scrollbar{display:none}
 .pipe-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer;padding:2px 4px}
 .pipe-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.1);transition:all 0.35s ease}
-.pipe-dot.done{background:var(--crust)}
-.pipe-dot.active{background:var(--ember);width:20px;border-radius:4px}
+.pipe-dot.done{background:var(--crust)}.pipe-dot.active{background:var(--ember);width:20px;border-radius:4px}
 .pipe-line{width:14px;height:1px;background:rgba(255,255,255,0.08);flex-shrink:0;margin-bottom:14px}
 .pipe-line.done{background:var(--crust);opacity:0.4}
 .pipe-label{font-size:8px;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap}
-.pipe-label.active{color:var(--ember)}
-.pipe-label.done{color:var(--crust);opacity:0.7}
-/* screens */
+.pipe-label.active{color:var(--ember)}.pipe-label.done{color:var(--crust);opacity:0.7}
 .screen{display:none;flex:1;flex-direction:column;overflow:hidden}
 .screen.active{display:flex}
 .scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px calc(20px + var(--safe-b))}
 .scroll-body::-webkit-scrollbar{display:none}
-/* tab bar */
 .tabbar{display:flex;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0;padding-bottom:var(--safe-b)}
 .tab{flex:1;padding:11px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:none;color:var(--mid);transition:color 0.2s}
-.tab.active{color:var(--crust)}
-.tab-icon{font-size:17px}
-.tab-label{font-size:9px;letter-spacing:0.1em;text-transform:uppercase}
-/* cards */
+.tab.active{color:var(--crust)}.tab-icon{font-size:17px}.tab-label{font-size:9px;letter-spacing:0.1em;text-transform:uppercase}
 .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:2px;padding:18px;margin-bottom:10px}
 .card-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--parchment);margin-bottom:4px}
 .card-sub{font-size:11px;color:var(--mid);letter-spacing:0.05em;margin-bottom:14px;line-height:1.5}
 .section-label{font-size:10px;color:var(--mid);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px}
 .info-box{background:rgba(184,144,74,0.08);border:1px solid rgba(184,144,74,0.2);border-radius:2px;padding:12px 14px;margin-bottom:10px}
 .info-box p{font-size:12px;color:var(--crust-light);line-height:1.6}
-/* ingredients */
+.warn-box{background:rgba(201,74,26,0.08);border:1px solid rgba(201,74,26,0.2);border-radius:2px;padding:12px 14px;margin-bottom:10px}
+.warn-box p{font-size:12px;color:var(--ember-light);line-height:1.6}
 .ingredient-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 .ingredient-row:last-child{border-bottom:none}
-.ing-name{font-size:13px;color:var(--warm)}
-.ing-amount{font-family:'Playfair Display',serif;font-size:16px;color:var(--crust-light)}
+.ing-name{font-size:13px;color:var(--warm)}.ing-amount{font-family:'Playfair Display',serif;font-size:16px;color:var(--crust-light)}
 .scale-row{display:flex;gap:6px;margin-bottom:14px}
 .scale-btn{padding:7px 0;flex:1;border:1px solid rgba(255,255,255,0.1);border-radius:2px;background:transparent;color:var(--mid);font-family:'Inconsolata',monospace;font-size:12px;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s;text-align:center}
 .scale-btn.selected{border-color:var(--crust);color:var(--crust);background:rgba(184,144,74,0.1)}
-/* steps */
 .steps-list{display:flex;flex-direction:column}
 .step-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);align-items:flex-start}
 .step-row:last-child{border-bottom:none}
 .step-num{font-family:'Playfair Display',serif;font-size:18px;color:rgba(255,255,255,0.15);width:20px;flex-shrink:0;line-height:1.2}
 .step-text{font-size:13px;color:var(--warm);line-height:1.5;flex:1}
 .step-note{font-size:11px;color:var(--mid);margin-top:3px;font-style:italic}
-/* fold track */
 .fold-track{display:flex;gap:8px;justify-content:center;margin:14px 0}
 .fold-pip{height:4px;border-radius:2px;background:rgba(255,255,255,0.1);flex:1;transition:all 0.4s ease}
-.fold-pip.done{background:var(--crust)}
-.fold-pip.active{background:var(--ember)}
-/* ring */
+.fold-pip.done{background:var(--crust)}.fold-pip.active{background:var(--ember)}
 .ring-wrap{position:relative;width:170px;height:170px;margin:4px auto 16px}
 .ring-svg{width:170px;height:170px;transform:rotate(-90deg)}
 .ring-track{fill:none;stroke:rgba(255,255,255,0.08);stroke-width:2.5}
-.ring-prog{fill:none;stroke:var(--ember);stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke 0.5s}
+.ring-prog{fill:none;stroke:var(--ember);stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
 .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .ring-time{font-family:'Playfair Display',serif;font-size:46px;color:var(--parchment);line-height:1;letter-spacing:-0.02em}
-.ring-time.urgent{color:var(--ember-light)}
-.ring-time.done-col{color:var(--sage)}
+.ring-time.urgent{color:var(--ember-light)}.ring-time.done-col{color:var(--sage)}.ring-time.idle{font-size:28px;color:var(--mid)}
 .ring-sub{font-size:10px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px}
-/* pending timer state */
-.ring-time.pending{color:var(--mid);font-size:32px}
-/* buttons */
 .btn-stack{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .btn{width:100%;padding:16px;border:none;border-radius:2px;font-family:'Inconsolata',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:transform 0.1s,opacity 0.15s}
-.btn:active{transform:scale(0.98)}
-.btn:disabled{opacity:0.3}
+.btn:active{transform:scale(0.98)}.btn:disabled{opacity:0.3}
 .btn-primary{background:var(--ember);color:var(--parchment)}
 .btn-crust{background:var(--crust);color:var(--ink)}
 .btn-sage{background:var(--sage);color:var(--parchment)}
@@ -102,31 +84,37 @@ html,body{height:100%;background:var(--ink);font-family:'Inconsolata',monospace;
 .dur-btn.selected{border-color:var(--ember);color:var(--ember);background:rgba(201,74,26,0.08)}
 .extend-btn{width:100%;padding:12px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;background:transparent;color:var(--mid);font-family:'Inconsolata',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-top:8px}
 .extend-btn:active{opacity:0.7}
-/* bake */
 .bake-step{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
 .bake-step:last-child{border-bottom:none}
 .bake-num{font-family:'Playfair Display',serif;font-size:20px;color:rgba(255,255,255,0.12);width:22px;flex-shrink:0;text-align:center}
-.bake-num.active-num{color:var(--ember)}
-.bake-num.done-num{color:var(--crust);opacity:0.4}
-.bake-info{flex:1}
-.bake-title{font-size:13px;color:var(--warm);margin-bottom:2px}
+.bake-num.active-num{color:var(--ember)}.bake-num.done-num{color:var(--crust);opacity:0.4}
+.bake-info{flex:1}.bake-title{font-size:13px;color:var(--warm);margin-bottom:2px}
 .bake-detail{font-size:11px;color:var(--mid);line-height:1.4}
 .bake-badge{font-size:11px;color:var(--ember);border:1px solid rgba(201,74,26,0.3);border-radius:2px;padding:3px 7px;white-space:nowrap}
 /* planner */
-.time-picker-row{display:flex;align-items:center;gap:10px;margin:14px 0}
-.time-picker-row label{font-size:12px;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;flex-shrink:0}
-.time-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:2px;color:var(--parchment);font-family:'Inconsolata',monospace;font-size:15px;padding:10px 12px;-webkit-appearance:none;outline:none}
+.time-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:2px;color:var(--parchment);font-family:'Inconsolata',monospace;font-size:15px;padding:12px;margin:10px 0 16px;outline:none;-webkit-appearance:none}
 .time-input:focus{border-color:var(--crust)}
-.plan-row{display:flex;align-items:baseline;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.slider-row{margin:12px 0 4px}
+.slider-label{display:flex;justify-content:space-between;font-size:11px;color:var(--mid);margin-bottom:6px}
+.slider-label span{color:var(--crust-light);font-size:13px}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--crust);cursor:pointer}
+.plan-timeline{display:flex;flex-direction:column;gap:0}
+.plan-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 .plan-row:last-child{border-bottom:none}
-.plan-label{font-size:13px;color:var(--warm);flex:1}
-.plan-note{font-size:11px;color:var(--mid);margin-top:2px}
-.plan-time{font-family:'Playfair Display',serif;font-size:17px;color:var(--crust-light);white-space:nowrap;margin-left:12px}
-.plan-time.highlight{color:var(--ember-light)}
-.day-chip{display:inline-block;font-size:10px;color:var(--mid);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:2px 8px;margin-right:6px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.06em}
-.day-chip.selected{border-color:var(--ember);color:var(--ember);background:rgba(201,74,26,0.08)}
-.day-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
-/* banner + overlay */
+.plan-dot-col{display:flex;flex-direction:column;align-items:center;padding-top:3px;flex-shrink:0;width:12px}
+.plan-dot{width:10px;height:10px;border-radius:50%;background:var(--mid);flex-shrink:0}
+.plan-dot.key{background:var(--crust)}.plan-dot.now{background:var(--ember)}
+.plan-line{width:1px;flex:1;min-height:8px;background:rgba(255,255,255,0.08);margin:3px 0}
+.plan-content{flex:1}
+.plan-label{font-size:13px;color:var(--warm);line-height:1.4}
+.plan-label.past{color:var(--mid);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.15)}
+.plan-label.key{color:var(--crust-light)}
+.plan-note{font-size:11px;color:var(--mid);margin-top:2px;line-height:1.4}
+.plan-time-col{flex-shrink:0;text-align:right}
+.plan-time{font-family:'Playfair Display',serif;font-size:15px;color:var(--crust-light)}
+.plan-time.past{color:var(--mid)}
+.plan-day{font-size:10px;color:var(--mid);letter-spacing:0.05em;margin-top:1px}
 .notif-banner{position:fixed;top:0;left:0;right:0;background:var(--ember);color:var(--parchment);font-size:12px;letter-spacing:0.06em;text-align:center;padding:12px 16px;z-index:1000;transform:translateY(-100%);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1)}
 .notif-banner.show{transform:translateY(0)}
 .overlay{position:fixed;inset:0;background:rgba(26,18,8,0.95);z-index:900;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px calc(40px + var(--safe-b));opacity:0;pointer-events:none;transition:opacity 0.3s;gap:12px;text-align:center}
@@ -151,20 +139,13 @@ html,body{height:100%;background:var(--ink);font-family:'Inconsolata',monospace;
     <div class="topbar-title">sourdough</div>
     <div class="topbar-reset" id="topRight" onclick="doReset()">reset</div>
   </div>
-  <!-- pipeline only shown on bake tab -->
   <div class="pipeline" id="pl"></div>
-
-  <!-- BAKE SCREEN -->
   <div class="screen active" id="screen-bake">
     <div class="scroll-body" id="mb"></div>
   </div>
-
-  <!-- PLANNER SCREEN -->
   <div class="screen" id="screen-plan">
     <div class="scroll-body" id="planBody"></div>
   </div>
-
-  <!-- tab bar -->
   <div class="tabbar">
     <button class="tab active" id="tab-bake" onclick="switchTab('bake')">
       <span class="tab-icon">🍞</span><span class="tab-label">Bake</span>
@@ -178,40 +159,114 @@ html,body{height:100%;background:var(--ink);font-family:'Inconsolata',monospace;
 // ── constants ──────────────────────────────────────────────────────────────
 const STAGES=['mix','folds','proof','shape','bake'];
 const SL=['Mix','Folds','Proof','Shape','Bake'];
-const FC=4, FMS=30*60*1000, PHM=20*60*1000, LOM=20*60*1000, SRM=20*60*1000, CIRC=465;
+const FC=4,FMS=30*60*1000,PHM=20*60*1000,LOM=20*60*1000,SRM=20*60*1000,CIRC=465;
 const BASE={starter:110,water:332,flour:487,salt:10};
-// Min buffer so a timer is never "already expired" when started
-const MIN_TIMER_MS = 5000;
 
 // ── state ──────────────────────────────────────────────────────────────────
 let S={stage:'mix',scale:1,
-  fd:0,mt:null,te:null,foldTimerRunning:false,
+  fd:0,te:null,foldRunning:false,
   pd:4,ps:null,pe:null,
   sre:null,srd:false,
   bs:0,bte:null,lom:13,ot:null};
-let ti=null, nids=[];
+let ti=null,nids=[];
+function save(){localStorage.setItem('sd8',JSON.stringify(S));}
+function load(){try{const d=JSON.parse(localStorage.getItem('sd8'));if(d&&d.stage){S=d;return true;}}catch(e){}return false;}
 
-function save(){localStorage.setItem('sd7',JSON.stringify(S));}
-function load(){try{const d=JSON.parse(localStorage.getItem('sd7'));if(d&&d.stage){S=d;return true;}}catch(e){}return false;}
-
-// ── notifications ──────────────────────────────────────────────────────────
+// ── notifications + audio alarm ───────────────────────────────────────────
+// We use both: push notification (works in background) + audio alarm (works when app is open)
 async function reqN(){
   if(!('Notification' in window))return;
   if(Notification.permission==='default'){
     const r=await Notification.requestPermission();
-    if(r==='granted') banner('Notifications enabled!');
+    if(r==='granted')banner('Notifications enabled ✓');
   }
 }
 function sched(t,b,ms){
   if(typeof Notification==='undefined'||Notification.permission!=='granted'||ms<=0)return;
-  nids.push(setTimeout(()=>new Notification(t,{body:b,icon:''}),ms));
+  nids.push(setTimeout(()=>{
+    try{new Notification(t,{body:b,icon:''});}catch(e){}
+  },ms));
 }
 function clearN(){nids.forEach(clearTimeout);nids=[];}
 
-// ── ui helpers ─────────────────────────────────────────────────────────────
-function banner(m,d=4000){const el=document.getElementById('nb');el.textContent=m;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),d);}
-function showOv(em,ti2,sb,bn,tp,sn=false){S.ot=tp;document.getElementById('oE').textContent=em;document.getElementById('oT').textContent=ti2;document.getElementById('oS').textContent=sb;document.getElementById('oB').textContent=bn;document.getElementById('oSn').style.display=sn?'block':'none';document.getElementById('ov').classList.add('show');}
-function hideOv(){document.getElementById('ov').classList.remove('show');S.ot=null;}
+// Alarm: plays a repeating beep pattern. On iOS, Web Audio works when app is open.
+// We also use a loud oscillator pattern that is hard to ignore.
+let alarmInt=null;
+function startAlarm(){
+  stopAlarm();
+  playBeep(4);
+  alarmInt=setInterval(()=>playBeep(3),4000);
+  // stop after 60s max
+  setTimeout(stopAlarm,60000);
+}
+function stopAlarm(){if(alarmInt){clearInterval(alarmInt);alarmInt=null;}}
+function playBeep(n=3){
+  try{
+    const c=new(window.AudioContext||window.webkitAudioContext)();
+    for(let i=0;i<n;i++){
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.frequency.value=i%2===0?880:1100;o.type='sine';
+      const t=c.currentTime+i*0.28;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(0.4,t+0.04);
+      g.gain.linearRampToValueAtTime(0,t+0.22);
+      o.start(t);o.stop(t+0.28);
+    }
+  }catch(e){}
+}
+
+// ── tick ───────────────────────────────────────────────────────────────────
+function stopTick(){if(ti){clearInterval(ti);ti=null;}}
+function startTick(end,done,cb){
+  stopTick();
+  const run=()=>{const r=Math.max(0,end-Date.now());cb&&cb(r);if(r<=0){stopTick();done();}};
+  ti=setInterval(run,500);run();
+}
+function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(s/60),sc=s%60;return String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');}
+function updR(rem,tot,ri,ti2){
+  const p=document.getElementById(ri),td=document.getElementById(ti2);if(!p||!td)return;
+  const f=tot>0?Math.max(0,Math.min(1,(tot-rem)/tot)):1;
+  p.style.strokeDashoffset=CIRC*(1-f);
+  td.textContent=fmt(rem);
+  td.className='ring-time'+(rem<=60000&&rem>0?' urgent':'')+(rem===0?' done-col':'');
+}
+function rHTML(ri,ti2,sub,idle=false){
+  return '<div class="ring-wrap"><svg class="ring-svg" viewBox="0 0 170 170">'
+    +'<circle class="ring-track" cx="85" cy="85" r="74"/>'
+    +'<circle class="ring-prog" id="'+ri+'" cx="85" cy="85" r="74" stroke-dasharray="'+CIRC+'" stroke-dashoffset="'+CIRC+'"/>'
+    +'</svg><div class="ring-center">'
+    +'<div class="ring-time'+(idle?' idle':'')+'" id="'+ti2+'">'+(idle?'ready':'--:--')+'</div>'
+    +'<div class="ring-sub">'+sub+'</div>'
+    +'</div></div>';
+}
+
+// ── pipeline ───────────────────────────────────────────────────────────────
+function renderPL(){
+  const el=document.getElementById('pl'),cur=STAGES.indexOf(S.stage);
+  el.innerHTML='';
+  STAGES.forEach((s,i)=>{
+    const pip=document.createElement('div');pip.className='pipe-step';
+    pip.onclick=()=>{stopTick();stopAlarm();S.stage=s;S.foldRunning=false;save();renderPL();render();};
+    const dot=document.createElement('div');dot.className='pipe-dot'+(i<cur?' done':i===cur?' active':'');
+    const lbl=document.createElement('div');lbl.className='pipe-label'+(i<cur?' done':i===cur?' active':'');
+    lbl.textContent=SL[i];pip.appendChild(dot);pip.appendChild(lbl);el.appendChild(pip);
+    if(i<STAGES.length-1){const ln=document.createElement('div');ln.className='pipe-line'+(i<cur?' done':'');el.appendChild(ln);}
+  });
+}
+
+// ── overlay ────────────────────────────────────────────────────────────────
+function showOv(em,t,sb,bn,tp,sn=false){
+  stopAlarm();startAlarm();
+  S.ot=tp;
+  document.getElementById('oE').textContent=em;
+  document.getElementById('oT').textContent=t;
+  document.getElementById('oS').textContent=sb;
+  document.getElementById('oB').textContent=bn;
+  document.getElementById('oSn').style.display=sn?'block':'none';
+  document.getElementById('ov').classList.add('show');
+}
+function hideOv(){stopAlarm();document.getElementById('ov').classList.remove('show');S.ot=null;}
 function ovConfirm(){const t=S.ot;hideOv();
   if(t==='fold')confFold();
   else if(t==='proof')toShape();
@@ -222,70 +277,21 @@ function ovConfirm(){const t=S.ot;hideOv();
 }
 function ovSnooze(){
   hideOv();
-  sched('Sourdough','Time to check your dough.',5*60*1000);
+  sched('Sourdough reminder','Time to check back.',5*60*1000);
   banner('+5 min — come back soon');
   setTimeout(()=>{
-    if(S.stage==='folds'&&S.foldTimerRunning===false){
-      const n=S.fd+1;
-      showOv('🤲','Fold '+n+' of '+FC,'Perform your stretch & fold, then tap Done to start the next timer.','Done — start next timer','fold',true);
-    }
+    if(S.stage==='folds'&&!S.foldRunning)
+      showOv('🤲','Fold '+(S.fd+1)+' of '+FC,'Perform your stretch & fold, then tap Done.','Done — start next timer','fold',true);
   },5*60*1000);
 }
-function beep(n=3){try{const c=new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;o.type='sine';const t=c.currentTime+i*0.22;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.25,t+0.05);g.gain.linearRampToValueAtTime(0,t+0.2);o.start(t);o.stop(t+0.25);}}catch(e){}}
+function banner(m,d=4000){const el=document.getElementById('nb');el.textContent=m;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),d);}
 
-// ── tick ───────────────────────────────────────────────────────────────────
-function stopTick(){if(ti){clearInterval(ti);ti=null;}}
-function startTick(end,done,cb){
-  stopTick();
-  const run=()=>{const r=end-Date.now();if(r<=0){cb&&cb(0);done();}else cb&&cb(r);};
-  ti=setInterval(run,500);run();
-}
-function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(s/60),sc=s%60;return String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');}
-function updR(rem,tot,ri,ti2){
-  const p=document.getElementById(ri),td=document.getElementById(ti2);
-  if(!p||!td)return;
-  const f=tot>0?Math.max(0,Math.min(1,(tot-rem)/tot)):1;
-  p.style.strokeDashoffset=CIRC*(1-f);
-  td.textContent=fmt(rem);
-  td.className='ring-time'+(rem<=60000&&rem>0?' urgent':'')+(rem===0?' done-col':'');
-}
-function rHTML(ri,ti2,sub,pending=false){
-  return '<div class="ring-wrap">'
-    +'<svg class="ring-svg" viewBox="0 0 170 170">'
-    +'<circle class="ring-track" cx="85" cy="85" r="74"/>'
-    +'<circle class="ring-prog" id="'+ri+'" cx="85" cy="85" r="74" stroke-dasharray="'+CIRC+'" stroke-dashoffset="'+CIRC+'"/>'
-    +'</svg>'
-    +'<div class="ring-center">'
-    +'<div class="ring-time'+(pending?' pending':'')+'" id="'+ti2+'">'+(pending?'tap to start':'--:--')+'</div>'
-    +'<div class="ring-sub">'+sub+'</div>'
-    +'</div></div>';
-}
-
-// ── pipeline ───────────────────────────────────────────────────────────────
-function renderPL(){
-  const el=document.getElementById('pl');
-  const cur=STAGES.indexOf(S.stage);
-  el.innerHTML='';
-  STAGES.forEach((s,i)=>{
-    const pip=document.createElement('div');
-    pip.className='pipe-step';
-    pip.onclick=()=>{stopTick();S.stage=s;S.foldTimerRunning=false;save();renderPL();render();};
-    const dot=document.createElement('div');
-    dot.className='pipe-dot'+(i<cur?' done':i===cur?' active':'');
-    const lbl=document.createElement('div');
-    lbl.className='pipe-label'+(i<cur?' done':i===cur?' active':'');
-    lbl.textContent=SL[i];
-    pip.appendChild(dot);pip.appendChild(lbl);el.appendChild(pip);
-    if(i<STAGES.length-1){const ln=document.createElement('div');ln.className='pipe-line'+(i<cur?' done':'');el.appendChild(ln);}
-  });
-}
-
-// ── scale / ingredients ────────────────────────────────────────────────────
+// ── scale / recipe ─────────────────────────────────────────────────────────
 function sv(b){return Math.round(b*S.scale);}
-function ingR(){return '<div class="ingredient-row"><span class="ing-name">Starter</span><span class="ing-amount">'+sv(BASE.starter)+'g</span></div>'
-  +'<div class="ingredient-row"><span class="ing-name">Warm water</span><span class="ing-amount">'+sv(BASE.water)+'g</span></div>'
-  +'<div class="ingredient-row"><span class="ing-name">Bread flour</span><span class="ing-amount">'+sv(BASE.flour)+'g</span></div>'
-  +'<div class="ingredient-row"><span class="ing-name">Salt</span><span class="ing-amount">'+sv(BASE.salt)+'g</span></div>';}
+function ingR(){return ['<div class="ingredient-row"><span class="ing-name">Starter</span><span class="ing-amount">'+sv(BASE.starter)+'g</span></div>',
+  '<div class="ingredient-row"><span class="ing-name">Warm water</span><span class="ing-amount">'+sv(BASE.water)+'g</span></div>',
+  '<div class="ingredient-row"><span class="ing-name">Bread flour</span><span class="ing-amount">'+sv(BASE.flour)+'g</span></div>',
+  '<div class="ingredient-row"><span class="ing-name">Salt</span><span class="ing-amount">'+sv(BASE.salt)+'g</span></div>'].join('');}
 function scaleH(){return '<div class="scale-row">'
   +'<button class="scale-btn'+(S.scale===0.5?' selected':'')+'" onclick="setScale(0.5)">half loaf</button>'
   +'<button class="scale-btn'+(S.scale===1?' selected':'')+'" onclick="setScale(1)">1 loaf</button>'
@@ -307,88 +313,70 @@ function renderMix(){
     +'<div class="card"><div class="card-title">Method</div><div class="steps-list">'
     +MS.map((s,i)=>'<div class="step-row"><div class="step-num">'+(i+1)+'</div><div><div class="step-text">'+s.t+'</div>'+(s.n?'<div class="step-note">'+s.n+'</div>':'')+'</div></div>').join('')
     +'</div></div>'
-    +'<div class="btn-stack"><button class="btn btn-primary" onclick="startFolds()">All mixed — start fold timers</button></div>';
+    +'<div class="btn-stack"><button class="btn btn-primary" onclick="toFolds()">All mixed — go to folds</button></div>';
 }
 
 // ── FOLDS ──────────────────────────────────────────────────────────────────
-function startFolds(){
-  S.stage='folds'; S.mt=Date.now(); S.fd=0; S.foldTimerRunning=false;
-  // schedule all notifications upfront from mix time
-  for(let i=1;i<=FC;i++) sched('Fold '+i+' of '+FC,'Time for your stretch & fold — open Sourdough.',i*FMS);
-  save(); renderPL(); renderFolds();
+// Each fold timer starts fresh from when Done is tapped — no anchoring.
+function toFolds(){
+  S.stage='folds';S.fd=0;S.foldRunning=false;S.te=null;
+  save();renderPL();renderFolds();
 }
 
 function renderFolds(){
   const nf=S.fd+1;
-  const running=S.foldTimerRunning;
+  const running=S.foldRunning;
   document.getElementById('mb').innerHTML=
-    '<div class="info-box"><p>Timers anchor to your mix time — a slow fold never causes drift.</p></div>'
-    +'<div class="card">'
+    '<div class="card">'
     +'<div class="card-title">Stretch &amp; folds</div>'
-    +'<div class="card-sub">4 rounds · 30 min apart</div>'
+    +'<div class="card-sub">4 rounds · tap Done after each fold to start the next 30 min timer</div>'
     +'<div class="fold-track" id="ft"></div>'
-    +rHTML('fR','fT',running?'until fold '+nf:'fold '+nf+' of '+FC, !running)
+    +rHTML('fR','fT',running?'until fold '+nf+' timer':!running&&S.fd>0?'fold '+nf+' ready':'fold 1 ready',!running)
     +'</div>'
-    +(running
-      ? '' // no button while timer is running
-      : '<div class="btn-stack"><button class="btn btn-primary" onclick="startFoldTimer()">Start 30 min timer</button></div>'
-    );
+    +'<div class="btn-stack">'
+    +(!running?'<button class="btn btn-primary" onclick="startFoldTimer()">Start '+(S.fd===0?'first':'next')+' 30 min timer</button>':'')
+    +(running?'<button class="btn btn-ghost" disabled>Timer running\u2026</button>':'')
+    +'</div>';
   renderFT();
-  if(running && S.te){
-    startTick(S.te, onFoldDone, rem=>updR(rem,FMS,'fR','fT'));
+  if(running&&S.te){
+    if(Date.now()>=S.te) onFoldDone();
+    else startTick(S.te,onFoldDone,rem=>updR(rem,FMS,'fR','fT'));
   }
 }
 
 function renderFT(){
-  const el=document.getElementById('ft');if(!el)return;
-  el.innerHTML='';
+  const el=document.getElementById('ft');if(!el)return;el.innerHTML='';
   for(let i=1;i<=FC;i++){
     const p=document.createElement('div');
-    p.className='fold-pip'+(i<=S.fd?' done':i===S.fd+1?' active':'');
+    p.className='fold-pip'+(i<=S.fd?' done':i===S.fd+1&&S.foldRunning?' active':'');
     el.appendChild(p);
   }
 }
 
 function startFoldTimer(){
-  // Set target anchored to mix time, but never in the past
-  const ideal = S.mt+(S.fd+1)*FMS;
-  const minEnd = Date.now()+MIN_TIMER_MS;
-  S.te = Math.max(ideal, minEnd);
-  S.foldTimerRunning = true;
-  save(); renderFolds();
+  S.te=Date.now()+FMS;S.foldRunning=true;save();renderFolds();
+  sched('Fold '+(S.fd+1)+' of '+FC,'Time for your stretch & fold.',FMS);
 }
 
 function onFoldDone(){
-  S.foldTimerRunning=false; save();
-  beep();
-  const n=S.fd+1;
-  showOv('🤲','Fold '+n+' of '+FC,'Perform your stretch & fold, then tap Done to start the next timer.','Done — start next timer','fold',true);
+  S.foldRunning=false;save();
+  showOv('🤲','Fold '+(S.fd+1)+' of '+FC,'Perform your stretch & fold, then tap Done to start the next 30 min timer.','Done — start next timer','fold',true);
 }
 
 function confFold(){
-  S.fd+=1; S.foldTimerRunning=false; save();
-  if(S.fd>=FC){
-    banner('All folds done — time to bulk proof');
-    toProof();
-  } else {
-    // Re-render folds screen with "Start timer" button — do NOT auto-start
-    renderFolds();
-  }
+  S.fd+=1;S.foldRunning=false;save();
+  if(S.fd>=FC){banner('All folds done — time to bulk proof');toProof();}
+  else renderFolds();
 }
 
 // ── PROOF ──────────────────────────────────────────────────────────────────
-function toProof(){
-  stopTick(); S.stage='proof'; S.ps=null; S.pe=null;
-  save(); renderPL(); renderProof();
-}
-
+function toProof(){stopTick();S.stage='proof';S.ps=null;S.pe=null;save();renderPL();renderProof();}
 function renderProof(){
-  const running = S.ps!==null;
-  const tot = running?(S.pe-S.ps):S.pd*3600000;
+  const running=S.ps!==null;
+  const tot=running?(S.pe-S.ps):S.pd*3600000;
   document.getElementById('mb').innerHTML=
     '<div class="info-box"><p>Cover with plastic wrap. Place in a draft-free spot — inside the oven (light off) works great.</p></div>'
-    +'<div class="card">'
-    +'<div class="card-title">Bulk proof</div>'
+    +'<div class="card"><div class="card-title">Bulk proof</div>'
     +'<div class="card-sub">Ready when dough pulls away from the bowl cleanly and is not sticky.</div>'
     +'<div class="section-label">Duration</div>'
     +'<div class="duration-pick">'
@@ -401,25 +389,19 @@ function renderProof(){
     +'</div>'
     +'<div class="btn-stack">'
     +(!running?'<button class="btn btn-primary" onclick="startProofTimer()">Start proof timer</button>':'')
-    +'<button class="btn btn-crust" onclick="toShape()">Dough is ready — skip to shaping</button>'
+    +'<button class="btn btn-ghost" onclick="toShape()">Skip — dough is ready</button>'
     +'</div>';
-
   if(running){
-    clearN();
-    sched('Bulk proof timer','Check your dough — is it ready?',S.pe-Date.now());
-    startTick(S.pe,()=>{beep();showOv('🫶','Bulk proof done','Check your dough — it should pull away from the bowl cleanly.','Ready — go to shaping','proof');},
+    clearN();sched('Bulk proof done','Check your dough — is it ready?',S.pe-Date.now());
+    startTick(S.pe,()=>{showOv('🫶','Bulk proof done','Check your dough — it should pull away from the bowl cleanly.','Ready — go to shaping','proof');},
       rem=>updR(rem,tot,'pR','pT'));
   }
 }
-
-function startProofTimer(){
-  S.ps=Date.now(); S.pe=S.ps+S.pd*3600000; save(); renderProof();
-}
+function startProofTimer(){S.ps=Date.now();S.pe=S.ps+S.pd*3600000;save();renderProof();}
 function setProofDur(h){S.pd=h;if(S.ps){S.pe=S.ps+h*3600000;}stopTick();save();renderProof();}
-function extProof(){
-  stopTick();S.pe+=30*60*1000;save();banner('+30 min added');
-  clearN();sched('Bulk proof timer','Check your dough — is it ready?',S.pe-Date.now());
-  startTick(S.pe,()=>{beep();showOv('🫶','Bulk proof done','Check your dough — it should pull away from the bowl cleanly.','Ready — go to shaping','proof');},
+function extProof(){stopTick();S.pe+=30*60*1000;save();banner('+30 min added');
+  clearN();sched('Bulk proof done','Check your dough.',S.pe-Date.now());
+  startTick(S.pe,()=>{showOv('🫶','Bulk proof done','Check your dough — it should pull away from the bowl cleanly.','Ready — go to shaping','proof');},
     rem=>updR(rem,S.pe-S.ps,'pR','pT'));
 }
 
@@ -430,23 +412,22 @@ const SS=[
   {t:'Fold left and right sides in (hotdog style)',n:null},
   {t:'Roll it up (hamburger style) and shape',n:'Watch a video — much easier to see than read!'}
 ];
-function toShape(){
-  stopTick();S.stage='shape';S.srd=false;S.sre=null;
-  save();renderPL();renderShape();
-}
+function toShape(){stopTick();S.stage='shape';S.srd=false;S.sre=null;save();renderPL();renderShape();}
 function renderShape(){
-  const b=document.getElementById('mb');
   const stepRows=SS.map((s,i)=>'<div class="step-row"><div class="step-num">'+(i+1)+'</div><div><div class="step-text">'+s.t+'</div>'+(s.n?'<div class="step-note">'+s.n+'</div>':'')+'</div></div>').join('');
-  b.innerHTML='<div class="card"><div class="card-title">Shaping</div><div class="card-sub">Work through the steps, rest 20 min, then reshape into the basket.</div><div class="steps-list">'+stepRows+'</div></div>'
+  document.getElementById('mb').innerHTML=
+    '<div class="card"><div class="card-title">Shaping</div>'
+    +'<div class="card-sub">Work through the steps, rest 20 min, then reshape into the basket.</div>'
+    +'<div class="steps-list">'+stepRows+'</div></div>'
     +(!S.srd
-      ? '<div class="btn-stack"><button class="btn btn-primary" onclick="startSR()">Done shaping — start 20 min rest</button></div>'
-        +(S.sre?'<div class="card" style="margin-top:10px">'+rHTML('shR','shT','rest timer')+'</div>':'')
-      : '<div class="card"><div class="card-title" style="color:var(--sage)">Rest complete</div>'
-        +'<div class="card-sub">Reshape your loaf, lightly flour your basket, place dough in, and put in the fridge overnight.</div></div>'
-        +'<div class="btn-stack"><button class="btn btn-crust" onclick="toBake()">In the fridge — go to bake day</button></div>'
+      ?'<div class="btn-stack"><button class="btn btn-primary" onclick="startSR()">Done shaping — start 20 min rest</button></div>'
+       +(S.sre?'<div class="card" style="margin-top:10px">'+rHTML('shR','shT','rest timer')+'</div>':'')
+      :'<div class="card"><div class="card-title" style="color:var(--sage)">Rest complete</div>'
+       +'<div class="card-sub">Reshape your loaf, lightly flour your basket, place dough in, and put in the fridge overnight.</div></div>'
+       +'<div class="btn-stack"><button class="btn btn-crust" onclick="toBake()">In the fridge — go to bake day</button></div>'
     );
   if(S.sre&&!S.srd)
-    startTick(S.sre,()=>{beep();showOv('🫓','Rest complete','Reshape your loaf, flour your basket, and put it in the fridge overnight.','Done — into the fridge','sr');},
+    startTick(S.sre,()=>{showOv('🫓','Rest complete','Reshape your loaf, flour your basket, and put in the fridge overnight.','Done — into the fridge','sr');},
       rem=>updR(rem,SRM,'shR','shT'));
 }
 function startSR(){S.sre=Date.now()+SRM;save();sched('Shape rest done','Time to reshape and put in the basket.',SRM);renderShape();}
@@ -465,89 +446,74 @@ function renderBake(){
   document.getElementById('mb').innerHTML=
     '<div class="info-box"><p>Bake anytime within 2 days, as long as the dough has been chilling at least 12 hours.</p></div>'
     +'<div class="card"><div class="card-title">Bake</div>'
-    +BSTEPS.map((step,i)=>
-      '<div class="bake-step">'
+    +BSTEPS.map((step,i)=>'<div class="bake-step">'
       +'<div class="bake-num '+(i<S.bs?'done-num':i===S.bs?'active-num':'')+'">'+(i+1)+'</div>'
       +'<div class="bake-info"><div class="bake-title" style="'+(i<S.bs?'color:var(--mid);text-decoration:line-through':'')+'">'+step.title+'</div>'
       +'<div class="bake-detail">'+step.detail+'</div></div>'
       +(step.timer?'<div class="bake-badge">'+step.timer+'</div>':'')
-      +'</div>').join('')
-    +'</div>'
+      +'</div>').join('')+'</div>'
     +(S.bte?'<div class="card">'+rHTML('bR','bT',(BSTEPS[S.bs]&&BSTEPS[S.bs].title||'').toLowerCase())+'</div>':'')
     +'<div class="btn-stack" id="bkBtns">'+getBB()+'</div>';
-  if(S.bte) startTick(S.bte,onBTDone,rem=>updR(rem,sm,'bR','bT'));
+  if(S.bte)startTick(S.bte,onBTDone,rem=>updR(rem,sm,'bR','bT'));
 }
 function getBB(){
-  if(S.bs===0&&!S.bte) return'<button class="btn btn-primary" onclick="startPH()">Start preheat timer</button>';
-  if(S.bs===0&&S.bte)  return'<button class="btn btn-ghost" disabled>Preheating\u2026</button>';
-  if(S.bs===1&&!S.bte) return'<button class="btn btn-primary" onclick="startLidOn()">Loaf is in — start 20 min timer</button>';
-  if(S.bs===1&&S.bte)  return'<button class="btn btn-ghost" disabled>Baking with lid\u2026</button>';
-  if(S.bs===2&&!S.bte) return'<div class="section-label">Lid-off duration</div>'
+  if(S.bs===0&&!S.bte)return'<button class="btn btn-primary" onclick="startPH()">Start preheat timer</button>';
+  if(S.bs===0&&S.bte)return'<button class="btn btn-ghost" disabled>Preheating\u2026</button>';
+  if(S.bs===1&&!S.bte)return'<button class="btn btn-primary" onclick="startLidOn()">Loaf is in — start 20 min timer</button>';
+  if(S.bs===1&&S.bte)return'<button class="btn btn-ghost" disabled>Baking with lid\u2026</button>';
+  if(S.bs===2&&!S.bte)return'<div class="section-label">Lid-off duration</div>'
     +'<div class="duration-pick">'
     +'<button class="dur-btn'+(S.lom===12?' selected':'')+'" onclick="setLO(12,event)">12 min</button>'
     +'<button class="dur-btn'+(S.lom===13?' selected':'')+'" onclick="setLO(13,event)">13 min</button>'
     +'<button class="dur-btn'+(S.lom===15?' selected':'')+'" onclick="setLO(15,event)">15 min</button>'
     +'</div><button class="btn btn-primary" onclick="startLidOff()">Lid off, temp down — start timer</button>';
-  if(S.bs===2&&S.bte)  return'<button class="btn btn-ghost" disabled>Baking without lid\u2026</button>';
-  if(S.bs===3) return'<button class="btn btn-sage" onclick="newBake()">\uD83C\uDF5E Start new bake</button>';
+  if(S.bs===2&&S.bte)return'<button class="btn btn-ghost" disabled>Baking without lid\u2026</button>';
+  if(S.bs===3)return'<button class="btn btn-sage" onclick="newBake()">\uD83C\uDF5E Start new bake</button>';
   return'';
 }
-function startPH(){S.bte=Date.now()+PHM;save();sched('Oven preheated','Dutch oven ready — time to score and bake!',PHM);renderBake();}
-function onBTDone(){beep(2);
-  if(S.bs===0) showOv('🔥','Oven is ready','Score your loaf and place in the Dutch oven. At least one big slash!','Ready — start bake timer','ph');
-  else if(S.bs===1) showOv('\u2668\uFE0F','Lid comes off','Reduce oven to 450\u00b0F and remove the lid.','Lid is off — start timer','lo');
-  else if(S.bs===2) showOv('🍞','Bake complete!','Deep golden brown. Cool a few hours before cutting.','Amazing!','lf');
+function startPH(){S.bte=Date.now()+PHM;save();sched('Oven preheated','Dutch oven ready — score and bake!',PHM);renderBake();}
+function onBTDone(){
+  if(S.bs===0)showOv('🔥','Oven is ready','Score your loaf and place in the Dutch oven. At least one big slash!','Ready — start bake timer','ph');
+  else if(S.bs===1)showOv('\u2668\uFE0F','Lid comes off','Reduce oven to 450\u00b0F and remove the lid.','Lid is off — start timer','lo');
+  else if(S.bs===2)showOv('🍞','Bake complete!','Deep golden brown. Cool a few hours before cutting.','Amazing!','lf');
 }
 function startLidOn(){S.bs=1;S.bte=Date.now()+LOM;save();sched('Time to remove lid','Reduce to 450\u00b0F and take the lid off.',LOM);renderBake();}
-function setLO(min,e){S.lom=min;save();document.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('selected'));if(e&&e.target)e.target.classList.add('selected');document.getElementById('bkBtns').innerHTML=getBB();}
+function setLO(min,e){S.lom=min;save();document.querySelectorAll('#bkBtns .dur-btn').forEach(b=>b.classList.remove('selected'));if(e&&e.target)e.target.classList.add('selected');document.getElementById('bkBtns').innerHTML=getBB();}
 function startLidOff(){S.bs=2;const ms=S.lom*60000;S.bte=Date.now()+ms;save();sched('Bake complete!','Take your loaf out and let it cool.',ms);renderBake();}
 function bakeDone(){stopTick();S.bs=3;S.bte=null;save();renderBake();banner('Enjoy your loaf!',6000);}
 
 // ── PLANNER ────────────────────────────────────────────────────────────────
-// Timeline (all in minutes before bake):
-// Starter feed:   8–12 hr before mix = 600 min before mix
-// Mix:            offset 0
-// Folds:          0–120 min (2hr total)
-// Bulk proof:     120–360 min (4hr)
-// Shape:          360–380 min (20 min rest)
-// Fridge:         380 min onward (overnight, min 12hr)
-// Preheat:        bake time - 20 min
-// Bake lid on:    bake time
-// Bake lid off:   bake time + 20 min
-// Done:           bake time + 33–35 min + cool
+// Starts from mix time and works forward.
+// User picks: when they will mix, and bulk proof duration.
+// Feed starter 8 hours before mix.
+// Folds: 2hr after mix
+// Proof: proofDur hours after folds end
+// Shape: 20min after proof
+// Fridge: overnight (we show earliest possible bake time = fridge + 12hr)
 
-// From bake time, work backwards:
-// fridge out / preheat: bakeTime - 20min
-// into fridge:          bakeTime - 12hr (minimum cold proof)
-// shape done:           into fridge
-// shape start:          shape done - 20min
-// proof end:            shape start
-// proof start / folds end: proof end - 4hr
-// folds start / mix time:  proof start - 2hr
-// starter feed:         mix time - 8hr (we'll use 8hr as minimum)
-
-let planBakeTime=null; // Date object
+let planState={mixHour:9,mixMinute:0,mixDayOffset:0,proofHr:4};
 
 function renderPlanner(){
   const pb=document.getElementById('planBody');
-
-  // default: next Saturday 10am
-  const def=defaultBakeTime();
-  const defStr=toLocalInput(def);
+  // day options: today, tomorrow, day after
+  const days=['Today','Tomorrow','In 2 days'];
 
   pb.innerHTML=
-    '<div class="card">'
-    +'<div class="card-title">Bake planner</div>'
-    +'<div class="card-sub">Pick when you want your loaf out of the oven. We\'ll work backwards to tell you when to do everything.</div>'
-    +'<div class="time-picker-row">'
-    +'<label>Bake time</label>'
-    +'<input type="datetime-local" class="time-input" id="bakeTimeInput" value="'+defStr+'" onchange="calcPlan()">'
+    '<div class="card"><div class="card-title">Bake planner</div>'
+    +'<div class="card-sub">Set your mix time and we\'ll map out the whole bake.</div>'
+    +'<div class="section-label">Mix day</div>'
+    +'<div class="duration-pick" id="dayPick">'
+    +days.map((d,i)=>'<button class="dur-btn'+(planState.mixDayOffset===i?' selected':'')+'" onclick="setPlanDay('+i+',event)">'+d+'</button>').join('')
     +'</div>'
-    +'<div class="section-label" style="margin-top:4px">Bulk proof</div>'
-    +'<div class="duration-pick">'
-    +'<button class="dur-btn'+(getPlanProof()===2?' selected':'')+'" onclick="setPlanProof(2,event)">2 hr</button>'
-    +'<button class="dur-btn'+(getPlanProof()===3?' selected':'')+'" onclick="setPlanProof(3,event)">3 hr</button>'
-    +'<button class="dur-btn'+(getPlanProof()===4?' selected':'')+'" onclick="setPlanProof(4,event)">4 hr</button>'
+    +'<div class="section-label">Mix time</div>'
+    +'<input type="time" class="time-input" id="mixTimeInput" value="'
+    +String(planState.mixHour).padStart(2,'0')+':'+String(planState.mixMinute).padStart(2,'0')
+    +'" onchange="onMixTimeChange()">'
+    +'<div class="section-label">Bulk proof duration</div>'
+    +'<div class="duration-pick" id="proofPick">'
+    +'<button class="dur-btn'+(planState.proofHr===2?' selected':'')+'" onclick="setPlanProof(2,event)">2 hr</button>'
+    +'<button class="dur-btn'+(planState.proofHr===3?' selected':'')+'" onclick="setPlanProof(3,event)">3 hr</button>'
+    +'<button class="dur-btn'+(planState.proofHr===4?' selected':'')+'" onclick="setPlanProof(4,event)">4 hr</button>'
     +'</div>'
     +'</div>'
     +'<div id="planResult"></div>';
@@ -555,162 +521,136 @@ function renderPlanner(){
   calcPlan();
 }
 
-let planProofHr=4;
-function getPlanProof(){return planProofHr;}
+function setPlanDay(i,e){
+  planState.mixDayOffset=i;
+  document.querySelectorAll('#dayPick .dur-btn').forEach(b=>b.classList.remove('selected'));
+  if(e&&e.target)e.target.classList.add('selected');
+  calcPlan();
+}
+function onMixTimeChange(){
+  const v=document.getElementById('mixTimeInput').value;
+  if(!v)return;
+  const [h,m]=v.split(':').map(Number);
+  planState.mixHour=h;planState.mixMinute=m;
+  calcPlan();
+}
 function setPlanProof(h,e){
-  planProofHr=h;
-  document.querySelectorAll('#planBody .dur-btn').forEach(b=>b.classList.remove('selected'));
+  planState.proofHr=h;
+  document.querySelectorAll('#proofPick .dur-btn').forEach(b=>b.classList.remove('selected'));
   if(e&&e.target)e.target.classList.add('selected');
   calcPlan();
 }
 
-function defaultBakeTime(){
-  const now=new Date();
-  // next Saturday 10am
-  const d=new Date(now);
-  d.setHours(10,0,0,0);
-  const day=d.getDay(); // 0=Sun,6=Sat
-  const daysToSat=((6-day)+7)%7||7;
-  d.setDate(d.getDate()+daysToSat);
-  return d;
-}
-
-function toLocalInput(d){
-  const pad=n=>String(n).padStart(2,'0');
-  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
-}
-
 function calcPlan(){
-  const inp=document.getElementById('bakeTimeInput');
-  if(!inp)return;
-  const bakeMs=new Date(inp.value).getTime();
-  if(isNaN(bakeMs)){document.getElementById('planResult').innerHTML='<div class="info-box"><p>Pick a valid bake date and time above.</p></div>';return;}
+  const now=new Date();
+  const mix=new Date(now);
+  mix.setDate(now.getDate()+planState.mixDayOffset);
+  mix.setHours(planState.mixHour,planState.mixMinute,0,0);
+  const mixMs=mix.getTime();
 
-  const proof=planProofHr*60; // minutes
-  // work backwards from bake time (ms)
   const t={};
-  t.bakeOut   = bakeMs + (20+13)*60*1000;   // done baking (lid off + 13min)
-  t.lidOff    = bakeMs + 20*60*1000;
-  t.lidOn     = bakeMs;
-  t.preheat   = bakeMs - 20*60*1000;
-  t.outFridge = t.preheat;                   // take out of fridge when preheating
-  t.inFridge  = bakeMs - 12*60*60*1000;      // min 12hr cold proof
-  t.shapeEnd  = t.inFridge;
-  t.shapeStart= t.shapeEnd - 20*60*1000;
-  t.proofEnd  = t.shapeStart;
-  t.proofStart= t.proofEnd - proof*60*1000;
-  t.mixTime   = t.proofStart - 2*60*60*1000; // 2hr for folds
-  t.feedTime  = t.mixTime - 8*60*60*1000;    // feed 8hr before mix
+  t.feed      = mixMs - 8*3600000;
+  t.mix       = mixMs;
+  t.foldsEnd  = mixMs + 2*3600000;
+  t.proofEnd  = t.foldsEnd + planState.proofHr*3600000;
+  t.shapeEnd  = t.proofEnd + 20*60000;
+  t.fridge    = t.shapeEnd;
+  t.earliest  = t.fridge + 12*3600000;   // earliest possible bake
+  t.preheat   = t.earliest - 20*60000;
+  t.lidOn     = t.earliest;
+  t.lidOff    = t.earliest + 20*60000;
+  t.done      = t.lidOff + 13*60000;
 
   const rows=[
-    {label:'Feed starter',      note:'Let it double before using',            time:t.feedTime,  hi:false},
-    {label:'Mix dough',         note:'Starter should be active and bubbly',   time:t.mixTime,   hi:true},
-    {label:'Stretch & folds',   note:'4 rounds over 2 hours',                 time:t.mixTime,   hi:false, end:t.proofStart},
-    {label:'Start bulk proof',  note:proof+' hr in a draft-free spot',        time:t.proofStart,hi:false},
-    {label:'Shape dough',       note:'20 min bench rest, then basket',        time:t.shapeStart,hi:false},
-    {label:'Into the fridge',   note:'Overnight cold proof (min 12 hr)',      time:t.inFridge,  hi:false},
-    {label:'Take out & preheat',note:'Dutch oven goes in now',                time:t.outFridge, hi:false},
-    {label:'Score & bake',      note:'20 min lid on, then 12–15 min lid off', time:t.lidOn,     hi:true},
-    {label:'Loaf is ready',     note:'Cool a couple hours before cutting',    time:t.bakeOut,   hi:true},
+    {label:'Feed starter',   note:'Let it double before using (~4–8 hr)',  ms:t.feed,   key:true},
+    {label:'Mix dough',      note:'Starter should be active and bubbly',   ms:t.mix,    key:true},
+    {label:'Stretch & folds',note:'4 rounds, one every 30 min',            ms:t.mix,    key:false, end:t.foldsEnd},
+    {label:'Start bulk proof',note:planState.proofHr+' hr in draft-free spot',ms:t.foldsEnd,key:false},
+    {label:'Shape & bench rest',note:'20 min rest before basket',          ms:t.proofEnd,key:false},
+    {label:'Into the fridge', note:'Overnight cold proof — min 12 hours',  ms:t.fridge, key:false},
+    {label:'Preheat oven',    note:'Dutch oven in at 475°F, 20 min minimum',ms:t.preheat,key:false},
+    {label:'Score & bake',    note:'20 min lid on → lid off at 450°F',     ms:t.lidOn,  key:true},
+    {label:'Loaf is ready',   note:'Cool 1–2 hrs before cutting',          ms:t.done,   key:true},
   ];
 
-  const now=Date.now();
-  let html='<div class="card">';
-  html+='<div class="card-title">Your schedule</div>';
-  html+='<div class="card-sub">Based on '+fmtDate(new Date(bakeMs))+' bake time</div>';
-
-  rows.forEach(r=>{
-    const past=r.time<now;
+  const nowMs=Date.now();
+  let html='<div class="card"><div class="plan-timeline">';
+  rows.forEach((r,i)=>{
+    const past=r.ms<nowMs;
     html+='<div class="plan-row">'
-      +'<div>'
-      +'<div class="plan-label" style="'+(past?'color:var(--mid)':'')+'">'+(past?'✓ ':'')+r.label+'</div>'
-      +'<div class="plan-note">'+r.note+(r.end?' → '+fmtTime12(new Date(r.end)):'')+'</div>'
+      +'<div class="plan-dot-col">'
+      +'<div class="plan-dot'+(r.key?' key':'')+(r.ms<=nowMs+60000&&r.ms>=nowMs-60000?' now':'')+'"></div>'
+      +(i<rows.length-1?'<div class="plan-line"></div>':'')
       +'</div>'
-      +'<div class="plan-time'+(r.hi?' highlight':'')+'" style="'+(past?'color:var(--mid)':'')+'">'+fmtTime12(new Date(r.time))+'<br><span style="font-size:10px;color:var(--mid)">'+fmtDay(new Date(r.time))+'</span></div>'
+      +'<div class="plan-content">'
+      +'<div class="plan-label'+(past?' past':'')+(r.key?' key':'')+'">'+r.label+'</div>'
+      +'<div class="plan-note">'+r.note+(r.end?' → '+fmtT(new Date(r.end)):'')+'</div>'
+      +'</div>'
+      +'<div class="plan-time-col">'
+      +'<div class="plan-time'+(past?' past':'')+'">'+fmtT(new Date(r.ms))+'</div>'
+      +'<div class="plan-day">'+fmtD(new Date(r.ms))+'</div>'
+      +'</div>'
       +'</div>';
   });
-  html+='</div>';
+  html+='</div></div>';
 
-  // Overnight warning
-  const coldHrs=Math.round((t.inFridge-t.mixTime)/(3600000)*10)/10;
-  html+='<div class="info-box"><p>Total time from mix to bake: ~'+Math.round((t.bakeOut-t.mixTime)/3600000)+' hours. Cold proof window: '+fmtTime12(new Date(t.inFridge))+' → '+fmtTime12(new Date(t.outFridge))+'.</p></div>';
+  // night warning
+  const fridgeDate=new Date(t.fridge);
+  const fridgeHour=fridgeDate.getHours();
+  if(fridgeHour<6||fridgeHour>23){
+    html+='<div class="warn-box"><p>Heads up: your dough goes in the fridge at '+fmtT(fridgeDate)+' ('+fmtD(fridgeDate)+'). That\'s late — consider starting your mix earlier.</p></div>';
+  }
 
   document.getElementById('planResult').innerHTML=html;
 }
 
-function fmtTime12(d){
-  if(isNaN(d))return'--';
+function fmtT(d){
+  if(!d||isNaN(d))return'--';
   let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'pm':'am';
   h=h%12||12;
-  return h+(m?':'+String(m).padStart(2,'0'):'')+' '+ap;
+  return h+(m?':'+String(m).padStart(2,'0'):'')+ap;
 }
-function fmtDay(d){
-  if(isNaN(d))return'';
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const now=new Date();
-  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+function fmtD(d){
+  if(!d||isNaN(d))return'';
+  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const tgt=new Date(d.getFullYear(),d.getMonth(),d.getDate());
   const diff=Math.round((tgt-today)/86400000);
-  if(diff===0)return'today';
-  if(diff===1)return'tomorrow';
-  if(diff===-1)return'yesterday';
-  return days[d.getDay()];
-}
-function fmtDate(d){
-  if(isNaN(d))return'--';
-  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+  if(diff===0)return'today';if(diff===1)return'tomorrow';if(diff===-1)return'yesterday';
+  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 }
 
-// ── tab switching ──────────────────────────────────────────────────────────
+// ── tab + reset ────────────────────────────────────────────────────────────
 function switchTab(tab){
   ['bake','plan'].forEach(t=>{
     document.getElementById('screen-'+t).classList.toggle('active',t===tab);
     document.getElementById('tab-'+t).classList.toggle('active',t===tab);
   });
-  document.getElementById('pl').style.display = tab==='bake'?'flex':'none';
-  document.getElementById('topRight').style.display = tab==='bake'?'block':'none';
-  if(tab==='plan') renderPlanner();
+  document.getElementById('pl').style.display=tab==='bake'?'flex':'none';
+  document.getElementById('topRight').style.display=tab==='bake'?'block':'none';
+  if(tab==='plan')renderPlanner();
 }
-
-// ── reset ──────────────────────────────────────────────────────────────────
 function doReset(){if(confirm('Reset and start a new bake?'))newBake();}
 function newBake(){
-  stopTick();clearN();
-  S={stage:'mix',scale:S.scale||1,fd:0,mt:null,te:null,foldTimerRunning:false,
-    pd:4,ps:null,pe:null,sre:null,srd:false,bs:0,bte:null,lom:13,ot:null};
+  stopTick();stopAlarm();clearN();
+  S={stage:'mix',scale:S.scale||1,fd:0,te:null,foldRunning:false,pd:4,ps:null,pe:null,sre:null,srd:false,bs:0,bte:null,lom:13,ot:null};
   save();renderPL();render();
 }
 
 // ── router ─────────────────────────────────────────────────────────────────
 function render(){
   const st=S.stage;
-  if(st==='mix') renderMix();
-  else if(st==='folds'){
-    // Never auto-trigger onFoldDone on load — always show the screen with button
-    renderFolds();
-    if(S.foldTimerRunning && S.te){
-      if(Date.now()>=S.te) onFoldDone();
-      else startTick(S.te,onFoldDone,rem=>updR(rem,FMS,'fR','fT'));
-    }
-  }
-  else if(st==='proof'){
-    renderProof();
-  }
-  else if(st==='shape') renderShape();
-  else if(st==='bake'){
-    renderBake();
-    if(S.bte&&Date.now()>=S.bte) onBTDone();
-  }
+  if(st==='mix')renderMix();
+  else if(st==='folds')renderFolds();
+  else if(st==='proof')renderProof();
+  else if(st==='shape')renderShape();
+  else if(st==='bake'){renderBake();if(S.bte&&Date.now()>=S.bte)onBTDone();}
   else renderMix();
 }
 
 // ── init ───────────────────────────────────────────────────────────────────
 async function init(){
   await reqN();
-  load();
-  renderPL();
-  render();
-  // hide planner pipeline initially
+  load();renderPL();render();
   document.getElementById('pl').style.display='flex';
   document.getElementById('topRight').style.display='block';
 }
