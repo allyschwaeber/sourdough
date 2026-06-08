@@ -8,748 +8,176 @@
 <meta name="apple-mobile-web-app-title" content="Sourdough">
 <title>Sourdough</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --cream: #F5F0E8;
-    --warm: #E8DFC8;
-    --crust: #C4A882;
-    --dark: #2C1810;
-    --mid: #6B4C35;
-    --accent: #D4622A;
-    --accent-light: #E8845A;
-    --green: #4A7C59;
-    --safe: env(safe-area-inset-bottom, 0px);
-  }
-
-  html, body {
-    height: 100%;
-    background: var(--dark);
-    color: var(--cream);
-    font-family: 'DM Mono', monospace;
-    overflow: hidden;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-
-  .app {
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Grain texture overlay */
-  .app::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 100;
-    opacity: 0.6;
-  }
-
-  /* Header */
-  .header {
-    padding: 56px 28px 16px;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-
-  .header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--crust);
-    letter-spacing: 0.02em;
-  }
-
-  .header .date {
-    font-size: 11px;
-    color: var(--mid);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  /* Main stage */
-  .stage {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 28px;
-    gap: 0;
-  }
-
-  /* Step indicator */
-  .step-track {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 40px;
-  }
-
-  .step-pip {
-    width: 28px;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--mid);
-    transition: background 0.4s ease, width 0.4s ease;
-  }
-
-  .step-pip.done { background: var(--crust); }
-  .step-pip.active { background: var(--accent); width: 44px; }
-
-  /* Phase label */
-  .phase-label {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 12px;
-    height: 16px;
-    transition: opacity 0.3s;
-  }
-
-  /* Timer ring */
-  .ring-wrap {
-    position: relative;
-    width: 220px;
-    height: 220px;
-    margin-bottom: 32px;
-  }
-
-  .ring-svg {
-    width: 220px;
-    height: 220px;
-    transform: rotate(-90deg);
-  }
-
-  .ring-track {
-    fill: none;
-    stroke: var(--mid);
-    stroke-width: 3;
-    opacity: 0.3;
-  }
-
-  .ring-progress {
-    fill: none;
-    stroke: var(--accent);
-    stroke-width: 3;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
-  }
-
-  .ring-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-
-  .time-display {
-    font-family: 'DM Serif Display', serif;
-    font-size: 62px;
-    color: var(--cream);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    transition: color 0.4s;
-  }
-
-  .time-display.urgent { color: var(--accent-light); }
-  .time-display.done-color { color: var(--green); }
-
-  .time-sub {
-    font-size: 11px;
-    color: var(--mid);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  /* Step description */
-  .step-desc {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 20px;
-    color: var(--warm);
-    text-align: center;
-    margin-bottom: 8px;
-    min-height: 28px;
-    transition: opacity 0.3s;
-  }
-
-  .step-hint {
-    font-size: 11px;
-    color: var(--mid);
-    text-align: center;
-    letter-spacing: 0.05em;
-    min-height: 16px;
-  }
-
-  /* Buttons */
-  .btn-area {
-    padding: 20px 28px calc(28px + var(--safe));
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .btn {
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: 4px;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.1s;
-  }
-
-  .btn:active { transform: scale(0.98); opacity: 0.85; }
-
-  .btn-primary {
-    background: var(--accent);
-    color: var(--cream);
-  }
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--mid);
-    border: 1px solid var(--mid);
-  }
-
-  .btn-green {
-    background: var(--green);
-    color: var(--cream);
-  }
-
-  .btn:disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-
-  /* Notif banner */
-  .notif-bar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    background: var(--accent);
-    color: var(--cream);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-align: center;
-    padding: 10px 16px;
-    z-index: 200;
-    transform: translateY(-100%);
-    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  }
-
-  .notif-bar.show { transform: translateY(0); }
-
-  /* Overlay for fold-done state */
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(44,24,16,0.92);
-    z-index: 150;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 40px 28px calc(40px + var(--safe));
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-
-  .overlay.show {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .overlay-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 32px;
-    color: var(--cream);
-    text-align: center;
-  }
-
-  .overlay-sub {
-    font-size: 13px;
-    color: var(--mid);
-    text-align: center;
-    letter-spacing: 0.06em;
-    line-height: 1.6;
-  }
-
-  .overlay .btn { max-width: 320px; width: 100%; }
-
-  /* Permission notice */
-  .perm-notice {
-    font-size: 11px;
-    color: var(--mid);
-    text-align: center;
-    padding: 0 28px 12px;
-    line-height: 1.5;
-    letter-spacing: 0.03em;
-  }
-
-  /* Complete screen */
-  .complete-icon {
-    font-size: 48px;
-    margin-bottom: 8px;
-  }
-
-  @keyframes pulse-ring {
-    0% { transform: scale(1); opacity: 0.6; }
-    50% { transform: scale(1.04); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.6; }
-  }
-
-  .ring-wrap.ticking .ring-progress {
-    animation: none;
-  }
-
-  .ring-wrap.alarm-pulse {
-    animation: pulse-ring 0.8s ease-in-out infinite;
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1208;--parchment:#F2EAD8;--warm:#E0D0B0;
+  --crust:#B8904A;--crust-light:#D4AA6A;
+  --ember:#C94A1A;--ember-light:#E06A3A;
+  --sage:#4A6B4A;--mid:#8A7458;
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-t:env(safe-area-inset-top,0px)
+}
+html,body{height:100%;background:var(--ink);font-family:'Inconsolata',monospace;-webkit-tap-highlight-color:transparent;user-select:none;overflow:hidden}
+.app{height:100dvh;display:flex;flex-direction:column;background:var(--ink);overflow:hidden}
+.app::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999}
+.topbar{padding:calc(var(--safe-t) + 14px) 24px 10px;display:flex;align-items:baseline;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--crust)}
+.topbar-reset{font-size:10px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:4px 0}
+.pipeline{display:flex;align-items:center;padding:4px 20px 16px;flex-shrink:0;overflow-x:auto}
+.pipeline::-webkit-scrollbar{display:none}
+.pipe-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer;padding:2px 4px}
+.pipe-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.1);transition:all 0.35s ease}
+.pipe-dot.done{background:var(--crust)}
+.pipe-dot.active{background:var(--ember);width:20px;border-radius:4px}
+.pipe-line{width:14px;height:1px;background:rgba(255,255,255,0.08);flex-shrink:0;margin-bottom:14px}
+.pipe-line.done{background:var(--crust);opacity:0.4}
+.pipe-label{font-size:8px;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap}
+.pipe-label.active{color:var(--ember)}
+.pipe-label.done{color:var(--crust);opacity:0.7}
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px calc(20px + var(--safe-b))}
+.scroll-body::-webkit-scrollbar{display:none}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:2px;padding:18px;margin-bottom:10px}
+.card-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--parchment);margin-bottom:4px}
+.card-sub{font-size:11px;color:var(--mid);letter-spacing:0.05em;margin-bottom:14px;line-height:1.5}
+.section-label{font-size:10px;color:var(--mid);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px}
+.info-box{background:rgba(184,144,74,0.08);border:1px solid rgba(184,144,74,0.2);border-radius:2px;padding:12px 14px;margin-bottom:10px}
+.info-box p{font-size:12px;color:var(--crust-light);line-height:1.6}
+.ingredient-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.ingredient-row:last-child{border-bottom:none}
+.ing-name{font-size:13px;color:var(--warm)}
+.ing-amount{font-family:'Playfair Display',serif;font-size:16px;color:var(--crust-light)}
+.scale-row{display:flex;gap:6px;margin-bottom:14px}
+.scale-btn{padding:7px 0;flex:1;border:1px solid rgba(255,255,255,0.1);border-radius:2px;background:transparent;color:var(--mid);font-family:'Inconsolata',monospace;font-size:12px;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s;text-align:center}
+.scale-btn.selected{border-color:var(--crust);color:var(--crust);background:rgba(184,144,74,0.1)}
+.steps-list{display:flex;flex-direction:column}
+.step-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);align-items:flex-start}
+.step-row:last-child{border-bottom:none}
+.step-num{font-family:'Playfair Display',serif;font-size:18px;color:rgba(255,255,255,0.15);width:20px;flex-shrink:0;line-height:1.2}
+.step-text{font-size:13px;color:var(--warm);line-height:1.5;flex:1}
+.step-note{font-size:11px;color:var(--mid);margin-top:3px;font-style:italic}
+.fold-track{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.fold-pip{height:4px;border-radius:2px;background:rgba(255,255,255,0.1);flex:1;transition:all 0.4s ease}
+.fold-pip.done{background:var(--crust)}
+.fold-pip.active{background:var(--ember)}
+.ring-wrap{position:relative;width:170px;height:170px;margin:4px auto 16px}
+.ring-svg{width:170px;height:170px;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:rgba(255,255,255,0.08);stroke-width:2.5}
+.ring-prog{fill:none;stroke:var(--ember);stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke 0.5s}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-time{font-family:'Playfair Display',serif;font-size:46px;color:var(--parchment);line-height:1;letter-spacing:-0.02em}
+.ring-time.urgent{color:var(--ember-light)}
+.ring-time.done-col{color:var(--sage)}
+.ring-sub{font-size:10px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px}
+.btn-stack{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.btn{width:100%;padding:16px;border:none;border-radius:2px;font-family:'Inconsolata',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:transform 0.1s,opacity 0.15s}
+.btn:active{transform:scale(0.98)}
+.btn:disabled{opacity:0.3}
+.btn-primary{background:var(--ember);color:var(--parchment)}
+.btn-crust{background:var(--crust);color:var(--ink)}
+.btn-sage{background:var(--sage);color:var(--parchment)}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid rgba(255,255,255,0.1)}
+.duration-pick{display:flex;gap:6px;margin:10px 0 4px}
+.dur-btn{flex:1;padding:10px 6px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;background:transparent;color:var(--mid);font-family:'Inconsolata',monospace;font-size:12px;cursor:pointer;transition:all 0.2s;text-align:center}
+.dur-btn.selected{border-color:var(--ember);color:var(--ember);background:rgba(201,74,26,0.08)}
+.extend-btn{width:100%;padding:12px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;background:transparent;color:var(--mid);font-family:'Inconsolata',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-top:8px}
+.extend-btn:active{opacity:0.7}
+.bake-step{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.bake-step:last-child{border-bottom:none}
+.bake-num{font-family:'Playfair Display',serif;font-size:20px;color:rgba(255,255,255,0.12);width:22px;flex-shrink:0;text-align:center}
+.bake-num.active-num{color:var(--ember)}
+.bake-num.done-num{color:var(--crust);opacity:0.4}
+.bake-info{flex:1}
+.bake-title{font-size:13px;color:var(--warm);margin-bottom:2px}
+.bake-detail{font-size:11px;color:var(--mid);line-height:1.4}
+.bake-badge{font-size:11px;color:var(--ember);border:1px solid rgba(201,74,26,0.3);border-radius:2px;padding:3px 7px;white-space:nowrap}
+.notif-banner{position:fixed;top:0;left:0;right:0;background:var(--ember);color:var(--parchment);font-size:12px;letter-spacing:0.06em;text-align:center;padding:12px 16px;z-index:1000;transform:translateY(-100%);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+.notif-banner.show{transform:translateY(0)}
+.overlay{position:fixed;inset:0;background:rgba(26,18,8,0.95);z-index:900;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px calc(40px + var(--safe-b));opacity:0;pointer-events:none;transition:opacity 0.3s;gap:12px;text-align:center}
+.overlay.show{opacity:1;pointer-events:all}
+.overlay-emoji{font-size:48px;margin-bottom:4px}
+.overlay-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--parchment)}
+.overlay-sub{font-size:13px;color:var(--mid);line-height:1.7;max-width:280px}
+.overlay .btn{max-width:300px;width:100%}
 </style>
 </head>
 <body>
-
-<div class="notif-bar" id="notifBar">🌾 Timer complete</div>
-
+<div class="notif-banner" id="nb"></div>
+<div class="overlay" id="ov">
+  <div class="overlay-emoji" id="oE">🌾</div>
+  <div class="overlay-title" id="oT"></div>
+  <div class="overlay-sub" id="oS"></div>
+  <button class="btn btn-crust" id="oB" onclick="ovConfirm()">Got it</button>
+  <button class="btn btn-ghost" id="oSn" onclick="ovSnooze()" style="display:none">+5 minutes</button>
+</div>
 <div class="app">
-  <div class="header">
-    <h1>Sourdough</h1>
-    <span class="date" id="headerDate"></span>
+  <div class="topbar">
+    <div class="topbar-title">sourdough</div>
+    <div class="topbar-reset" onclick="doReset()">reset</div>
   </div>
-
-  <div class="stage">
-    <div class="step-track" id="stepTrack"></div>
-    <div class="phase-label" id="phaseLabel">Ready to begin</div>
-    <div class="ring-wrap" id="ringWrap">
-      <svg class="ring-svg" viewBox="0 0 220 220">
-        <circle class="ring-track" cx="110" cy="110" r="98"/>
-        <circle class="ring-progress" id="ringProgress" cx="110" cy="110" r="98"
-          stroke-dasharray="615.75"
-          stroke-dashoffset="0"/>
-      </svg>
-      <div class="ring-center">
-        <div class="time-display" id="timeDisplay">—</div>
-        <div class="time-sub" id="timeSub">tap start to begin</div>
-      </div>
-    </div>
-    <div class="step-desc" id="stepDesc">Mix your dough</div>
-    <div class="step-hint" id="stepHint">then tap start below</div>
-  </div>
-
-  <div class="perm-notice" id="permNotice"></div>
-
-  <div class="btn-area" id="btnArea">
-    <button class="btn btn-primary" id="mainBtn" onclick="handleMain()">Start bake</button>
-    <button class="btn btn-secondary" id="secBtn" onclick="handleSecondary()" style="display:none">Reset</button>
-  </div>
+  <div class="pipeline" id="pl"></div>
+  <div class="scroll-body" id="mb"></div>
 </div>
-
-<!-- Fold-ready overlay -->
-<div class="overlay" id="overlay">
-  <div class="overlay-title" id="overlayTitle">Time to fold</div>
-  <div class="overlay-sub" id="overlaySub"></div>
-  <button class="btn btn-green" onclick="confirmFold()">Done — start next timer</button>
-  <button class="btn btn-secondary" onclick="snooze()">+5 minutes</button>
-</div>
-
 <script>
-  // ── State ──────────────────────────────────────────────────────────────────
-  const FOLD_COUNT = 4;
-  const INTERVAL_MS = 30 * 60 * 1000; // 30 min
-  const CIRCUMFERENCE = 615.75;
-
-  let state = {
-    running: false,
-    mixTime: null,       // timestamp ms
-    foldsDone: 0,        // 0–4
-    timerEnd: null,      // timestamp ms when current timer ends
-    tickInterval: null,
-    notifPermission: 'default',
-    scheduledNotifs: [],
-    snoozed: false,
-  };
-
-  // ── Persistence ────────────────────────────────────────────────────────────
-  function saveState() {
-    localStorage.setItem('sd_state', JSON.stringify({
-      running: state.running,
-      mixTime: state.mixTime,
-      foldsDone: state.foldsDone,
-      timerEnd: state.timerEnd,
-    }));
-  }
-
-  function loadState() {
-    try {
-      const s = JSON.parse(localStorage.getItem('sd_state') || 'null');
-      if (s && s.running) {
-        state.running = s.running;
-        state.mixTime = s.mixTime;
-        state.foldsDone = s.foldsDone;
-        state.timerEnd = s.timerEnd;
-        return true;
-      }
-    } catch(e) {}
-    return false;
-  }
-
-  function clearState() {
-    localStorage.removeItem('sd_state');
-    state.running = false;
-    state.mixTime = null;
-    state.foldsDone = 0;
-    state.timerEnd = null;
-    state.snoozed = false;
-  }
-
-  // ── Notifications ──────────────────────────────────────────────────────────
-  async function requestNotifPermission() {
-    if (!('Notification' in window)) return;
-    if (Notification.permission === 'granted') {
-      state.notifPermission = 'granted';
-      return;
-    }
-    const result = await Notification.requestPermission();
-    state.notifPermission = result;
-    updatePermNotice();
-  }
-
-  function scheduleNotif(title, body, delayMs) {
-    if (state.notifPermission !== 'granted') return;
-    const id = setTimeout(() => {
-      new Notification(title, { body, icon: '', silent: false });
-    }, delayMs);
-    state.scheduledNotifs.push(id);
-  }
-
-  function clearAllNotifs() {
-    state.scheduledNotifs.forEach(id => clearTimeout(id));
-    state.scheduledNotifs = [];
-  }
-
-  function updatePermNotice() {
-    const el = document.getElementById('permNotice');
-    if (!('Notification' in window)) {
-      el.textContent = 'Add to home screen for push notifications.';
-    } else if (Notification.permission === 'denied') {
-      el.textContent = 'Notifications blocked — enable in Settings → Safari → Notifications.';
-    } else if (Notification.permission === 'default') {
-      el.textContent = '';
-    } else {
-      el.textContent = '';
-    }
-  }
-
-  // ── Timer logic ────────────────────────────────────────────────────────────
-  function targetTimeForFold(foldNumber) {
-    // foldNumber 1–4; rest before fold 1 = 30min, before fold 2 = 60min etc.
-    return state.mixTime + foldNumber * INTERVAL_MS;
-  }
-
-  function startTimer(endTimestamp) {
-    state.timerEnd = endTimestamp;
-    saveState();
-    if (state.tickInterval) clearInterval(state.tickInterval);
-    state.tickInterval = setInterval(tick, 500);
-    tick();
-  }
-
-  function tick() {
-    const now = Date.now();
-    const remaining = state.timerEnd - now;
-
-    if (remaining <= 0) {
-      clearInterval(state.tickInterval);
-      onTimerComplete();
-      return;
-    }
-
-    const totalDuration = INTERVAL_MS;
-    const elapsed = totalDuration - remaining;
-    const progress = Math.max(0, Math.min(1, elapsed / totalDuration));
-
-    updateRing(progress, remaining);
-  }
-
-  function onTimerComplete() {
-    updateRing(1, 0);
-    document.getElementById('ringWrap').classList.add('alarm-pulse');
-
-    const nextFold = state.foldsDone + 1;
-
-    if (nextFold <= FOLD_COUNT) {
-      showOverlay(nextFold);
-      showNotifBanner(`Time for stretch & fold ${nextFold} of ${FOLD_COUNT}`);
-      playBeep();
-    } else {
-      // All done
-      showComplete();
-    }
-  }
-
-  // ── UI Updates ─────────────────────────────────────────────────────────────
-  function updateRing(progress, remainingMs) {
-    const offset = CIRCUMFERENCE * (1 - progress);
-    document.getElementById('ringProgress').style.strokeDashoffset = offset;
-
-    const secs = Math.max(0, Math.ceil(remainingMs / 1000));
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    const display = secs > 0
-      ? `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
-      : '00:00';
-
-    const td = document.getElementById('timeDisplay');
-    td.textContent = display;
-    td.className = 'time-display' + (secs <= 60 && secs > 0 ? ' urgent' : '') + (secs === 0 ? ' done-color' : '');
-  }
-
-  function renderStepTrack() {
-    const track = document.getElementById('stepTrack');
-    // Steps: rest, fold1, fold2, fold3, fold4
-    const total = 5;
-    const currentStep = state.foldsDone + 1; // 1 = rest, 2 = fold1, etc.
-    track.innerHTML = '';
-    for (let i = 1; i <= total; i++) {
-      const pip = document.createElement('div');
-      pip.className = 'step-pip' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
-      track.appendChild(pip);
-    }
-  }
-
-  function renderPhase() {
-    const labels = ['30 min rest', 'fold 1 of 4', 'fold 2 of 4', 'fold 3 of 4', 'fold 4 of 4'];
-    const descs = [
-      'resting after mix',
-      'stretch & fold 2 next',
-      'stretch & fold 3 next',
-      'stretch & fold 4 next',
-      'last fold — bulk ferment after',
-    ];
-    const hints = [
-      'timer running — check back when it ends',
-      'timer running',
-      'timer running',
-      'timer running',
-      'timer running',
-    ];
-    const i = state.foldsDone;
-    document.getElementById('phaseLabel').textContent = labels[i] || '';
-    document.getElementById('stepDesc').textContent = descs[i] || '';
-    document.getElementById('stepHint').textContent = hints[i] || '';
-  }
-
-  function showOverlay(foldNum) {
-    document.getElementById('overlayTitle').textContent = `Fold ${foldNum} of ${FOLD_COUNT}`;
-    document.getElementById('overlaySub').textContent =
-      `Perform your stretch & fold,\nthen tap done to start the next timer.`;
-    document.getElementById('overlay').classList.add('show');
-    document.getElementById('ringWrap').classList.remove('alarm-pulse');
-  }
-
-  function hideOverlay() {
-    document.getElementById('overlay').classList.remove('show');
-  }
-
-  function showNotifBanner(msg) {
-    const bar = document.getElementById('notifBar');
-    bar.textContent = '🌾 ' + msg;
-    bar.classList.add('show');
-    setTimeout(() => bar.classList.remove('show'), 4000);
-  }
-
-  function showComplete() {
-    hideOverlay();
-    document.getElementById('phaseLabel').textContent = 'Complete';
-    document.getElementById('stepDesc').textContent = 'All 4 folds done';
-    document.getElementById('stepHint').textContent = 'shape your loaf when ready';
-    document.getElementById('timeDisplay').textContent = '✓';
-    document.getElementById('timeDisplay').className = 'time-display done-color';
-    document.getElementById('timeSub').textContent = 'bulk ferment ready';
-    document.getElementById('ringProgress').style.stroke = 'var(--green)';
-    document.getElementById('mainBtn').style.display = 'none';
-    document.getElementById('secBtn').style.display = 'block';
-    document.getElementById('secBtn').textContent = 'Start new bake';
-    document.getElementById('secBtn').className = 'btn btn-secondary';
-    showNotifBanner('All folds complete — shape your loaf!');
-    playBeep();
-    clearState();
-  }
-
-  // ── Actions ────────────────────────────────────────────────────────────────
-  function handleMain() {
-    if (!state.running) {
-      startBake();
-    }
-  }
-
-  function handleSecondary() {
-    resetBake();
-  }
-
-  function startBake() {
-    state.running = true;
-    state.mixTime = Date.now();
-    state.foldsDone = 0;
-
-    // Schedule all 4 fold notifications
-    for (let i = 1; i <= FOLD_COUNT; i++) {
-      const delay = i * INTERVAL_MS - (Date.now() - state.mixTime);
-      scheduleNotif(
-        `Fold ${i} of ${FOLD_COUNT} ready`,
-        'Time for your stretch & fold — open Sourdough.',
-        delay
-      );
-    }
-
-    saveState();
-    renderStepTrack();
-    renderPhase();
-
-    document.getElementById('mainBtn').textContent = 'Running…';
-    document.getElementById('mainBtn').disabled = true;
-    document.getElementById('secBtn').style.display = 'block';
-    document.getElementById('timeSub').textContent = 'remaining';
-
-    startTimer(targetTimeForFold(1));
-  }
-
-  function confirmFold() {
-    hideOverlay();
-    state.foldsDone += 1;
-
-    if (state.foldsDone >= FOLD_COUNT) {
-      showComplete();
-      return;
-    }
-
-    saveState();
-    renderStepTrack();
-    renderPhase();
-
-    // Next target: anchor to mix time
-    const nextTarget = targetTimeForFold(state.foldsDone + 1);
-    startTimer(nextTarget);
-  }
-
-  function snooze() {
-    hideOverlay();
-    // Add 5 min snooze — but still anchor to mix time for the real timer
-    // Just delay the overlay reprompt
-    state.snoozed = true;
-    setTimeout(() => {
-      const nextFold = state.foldsDone + 1;
-      if (nextFold <= FOLD_COUNT) showOverlay(nextFold);
-    }, 5 * 60 * 1000);
-
-    showNotifBanner('+5 min — come back soon');
-  }
-
-  function resetBake() {
-    clearInterval(state.tickInterval);
-    clearAllNotifs();
-    clearState();
-
-    document.getElementById('ringProgress').style.strokeDashoffset = '0';
-    document.getElementById('ringProgress').style.stroke = 'var(--accent)';
-    document.getElementById('ringWrap').classList.remove('alarm-pulse');
-    document.getElementById('timeDisplay').textContent = '—';
-    document.getElementById('timeDisplay').className = 'time-display';
-    document.getElementById('timeSub').textContent = 'tap start to begin';
-    document.getElementById('phaseLabel').textContent = 'Ready to begin';
-    document.getElementById('stepDesc').textContent = 'Mix your dough';
-    document.getElementById('stepHint').textContent = 'then tap start below';
-    document.getElementById('mainBtn').textContent = 'Start bake';
-    document.getElementById('mainBtn').disabled = false;
-    document.getElementById('mainBtn').style.display = 'block';
-    document.getElementById('secBtn').style.display = 'none';
-    hideOverlay();
-
-    const track = document.getElementById('stepTrack');
-    track.innerHTML = '';
-    for (let i = 0; i < 5; i++) {
-      const pip = document.createElement('div');
-      pip.className = 'step-pip';
-      track.appendChild(pip);
-    }
-  }
-
-  // ── Audio beep ─────────────────────────────────────────────────────────────
-  function playBeep() {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      [0, 0.2, 0.4].forEach(delay => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 880;
-        osc.type = 'sine';
-        gain.gain.setValueAtTime(0, ctx.currentTime + delay);
-        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + delay + 0.05);
-        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + delay + 0.3);
-        osc.start(ctx.currentTime + delay);
-        osc.stop(ctx.currentTime + delay + 0.35);
-      });
-    } catch(e) {}
-  }
-
-  // ── Init ───────────────────────────────────────────────────────────────────
-  function init() {
-    // Date header
-    const now = new Date();
-    document.getElementById('headerDate').textContent =
-      now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-
-    // Empty step track
-    const track = document.getElementById('stepTrack');
-    for (let i = 0; i < 5; i++) {
-      const pip = document.createElement('div');
-      pip.className = 'step-pip';
-      track.appendChild(pip);
-    }
-
-    // Request notifications
-    requestNotifPermission();
-    updatePermNotice();
-
-    // Resume if mid-bake
-    if (loadState()) {
-      renderStepTrack();
-      renderPhase();
-      document.getElementById('mainBtn').textContent = 'Running…';
-      document.getElementById('mainBtn').disabled = true;
-      document.getElementById('secBtn').style.display = 'block';
-      document.getElementById('timeSub').textContent = 'remaining';
-
-      // Check if timer already expired
-      if (state.timerEnd && Date.now() >= state.timerEnd) {
-        onTimerComplete();
-      } else if (state.timerEnd) {
-        startTimer(state.timerEnd);
-      }
-    }
-  }
-
-  window.addEventListener('load', init);
+const STAGES=['mix','folds','proof','shape','bake'];
+const SL=['Mix','Folds','Proof','Shape','Bake'];
+const FC=4,FMS=30*60*1000,PHM=20*60*1000,LOM=20*60*1000,SRM=20*60*1000,CIRC=465;
+const BASE={starter:110,water:332,flour:487,salt:10};
+let S={stage:'mix',scale:1,fd:0,mt:null,te:null,pd:3,ps:null,pe:null,sre:null,srd:false,bs:0,bte:null,lom:13,ot:null};
+let ti=null,nids=[];
+function save(){localStorage.setItem('sd6',JSON.stringify(S));}
+function load(){try{const d=JSON.parse(localStorage.getItem('sd6'));if(d&&d.stage){S=d;return true;}}catch(e){}return false;}
+async function reqN(){if(!('Notification'in window))return;if(Notification.permission==='default')await Notification.requestPermission();}
+function sched(t,b,ms){if(typeof Notification==='undefined'||Notification.permission!=='granted'||ms<=0)return;nids.push(setTimeout(()=>new Notification(t,{body:b}),ms));}
+function clearN(){nids.forEach(clearTimeout);nids=[];}
+function banner(m,d=4000){const el=document.getElementById('nb');el.textContent=m;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),d);}
+function showOv(em,ti,sb,bn,tp,sn=false){S.ot=tp;document.getElementById('oE').textContent=em;document.getElementById('oT').textContent=ti;document.getElementById('oS').textContent=sb;document.getElementById('oB').textContent=bn;document.getElementById('oSn').style.display=sn?'block':'none';document.getElementById('ov').classList.add('show');}
+function hideOv(){document.getElementById('ov').classList.remove('show');S.ot=null;}
+function ovConfirm(){const t=S.ot;hideOv();if(t==='fold')confFold();else if(t==='proof')toShape();else if(t==='sr')confSR();else if(t==='ph')startLidOn();else if(t==='lo')startLidOff();else if(t==='lf')bakeDone();}
+function ovSnooze(){hideOv();sched('Sourdough','Time to check your dough.',5*60*1000);banner('+5 min — come back soon');setTimeout(()=>{if(S.stage==='folds'){const n=S.fd+1;showOv('🤲','Fold '+n+' of '+FC,'Perform your stretch & fold, then tap Done to start the next timer.','Done — start next timer','fold',true);}},5*60*1000);}
+function beep(n=3){try{const c=new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;o.type='sine';const t=c.currentTime+i*0.22;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.25,t+0.05);g.gain.linearRampToValueAtTime(0,t+0.2);o.start(t);o.stop(t+0.25);}}catch(e){}}
+function stopTick(){if(ti){clearInterval(ti);ti=null;}}
+function startTick(end,done,cb){stopTick();const run=()=>{const r=end-Date.now();if(r<=0){cb&&cb(0);done();}else cb&&cb(r);};ti=setInterval(run,500);run();}
+function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(s/60),sc=s%60;return String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');}
+function updR(rem,tot,ri,ti2){const p=document.getElementById(ri),td=document.getElementById(ti2);if(!p||!td)return;const f=tot>0?Math.max(0,Math.min(1,(tot-rem)/tot)):1;p.style.strokeDashoffset=CIRC*(1-f);td.textContent=fmt(rem);td.className='ring-time'+(rem<=60000&&rem>0?' urgent':'')+(rem===0?' done-col':'');}
+function rHTML(ri,ti2,sub){return '<div class="ring-wrap"><svg class="ring-svg" viewBox="0 0 170 170"><circle class="ring-track" cx="85" cy="85" r="74"/><circle class="ring-prog" id="'+ri+'" cx="85" cy="85" r="74" stroke-dasharray="'+CIRC+'" stroke-dashoffset="'+CIRC+'"/></svg><div class="ring-center"><div class="ring-time" id="'+ti2+'">--:--</div><div class="ring-sub">'+sub+'</div></div></div>';}
+function renderPL(){const el=document.getElementById('pl');const cur=STAGES.indexOf(S.stage);el.innerHTML='';STAGES.forEach((s,i)=>{const pip=document.createElement('div');pip.className='pipe-step';pip.onclick=()=>{stopTick();S.stage=s;save();renderPL();render();};const dot=document.createElement('div');dot.className='pipe-dot'+(i<cur?' done':i===cur?' active':'');const lbl=document.createElement('div');lbl.className='pipe-label'+(i<cur?' done':i===cur?' active':'');lbl.textContent=SL[i];pip.appendChild(dot);pip.appendChild(lbl);el.appendChild(pip);if(i<STAGES.length-1){const ln=document.createElement('div');ln.className='pipe-line'+(i<cur?' done':'');el.appendChild(ln);}});}
+function sv(b){return Math.round(b*S.scale);}
+function ingR(){return '<div class="ingredient-row"><span class="ing-name">Starter</span><span class="ing-amount">'+sv(BASE.starter)+'g</span></div><div class="ingredient-row"><span class="ing-name">Warm water</span><span class="ing-amount">'+sv(BASE.water)+'g</span></div><div class="ingredient-row"><span class="ing-name">Bread flour</span><span class="ing-amount">'+sv(BASE.flour)+'g</span></div><div class="ingredient-row"><span class="ing-name">Salt</span><span class="ing-amount">'+sv(BASE.salt)+'g</span></div>';}
+function scaleH(){return '<div class="scale-row"><button class="scale-btn'+(S.scale===0.5?' selected':'')+'" onclick="setScale(0.5)">half loaf</button><button class="scale-btn'+(S.scale===1?' selected':'')+'" onclick="setScale(1)">1 loaf</button><button class="scale-btn'+(S.scale===2?' selected':'')+'" onclick="setScale(2)">2 loaves</button></div>';}
+function setScale(v){S.scale=v;save();render();}
+const MS=[{t:'Put bowl on scale and zero it out',n:'Zero between each ingredient, or do the math'},{t:'Add starter and water, whisk together',n:null},{t:'Add flour, whisk until shaggy dough forms',n:null},{t:'Add salt and dimple it in',n:null},{t:'Cover with plastic wrap',n:null}];
+function renderMix(){document.getElementById('mb').innerHTML='<div class="card"><div class="card-title">Recipe</div>'+scaleH()+ingR()+'</div><div class="card"><div class="card-title">Method</div><div class="steps-list">'+MS.map((s,i)=>'<div class="step-row"><div class="step-num">'+(i+1)+'</div><div><div class="step-text">'+s.t+'</div>'+(s.n?'<div class="step-note">'+s.n+'</div>':'')+'</div></div>').join('')+'</div></div><div class="btn-stack"><button class="btn btn-primary" onclick="startFolds()">All mixed — start fold timers</button></div>';}
+function startFolds(){S.stage='folds';S.mt=Date.now();S.fd=0;for(let i=1;i<=FC;i++)sched('Fold '+i+' of '+FC,'Time for your stretch & fold.',i*FMS);S.te=S.mt+FMS;save();renderPL();renderFolds();}
+function renderFolds(){const nf=S.fd+1;document.getElementById('mb').innerHTML='<div class="info-box"><p>Timers anchor to your mix time — a slow fold never causes drift in later rounds.</p></div><div class="card"><div class="card-title">Stretch &amp; folds</div><div class="card-sub">4 rounds · 30 min apart</div><div class="fold-track" id="ft"></div>'+rHTML('fR','fT','until fold '+nf)+'</div>';renderFT();startTick(S.te,onFoldDone,rem=>updR(rem,FMS,'fR','fT'));}
+function renderFT(){const el=document.getElementById('ft');if(!el)return;el.innerHTML='';for(let i=1;i<=FC;i++){const p=document.createElement('div');p.className='fold-pip'+(i<=S.fd?' done':i===S.fd+1?' active':'');el.appendChild(p);}}
+function onFoldDone(){beep();const n=S.fd+1;showOv('🤲','Fold '+n+' of '+FC,'Perform your stretch & fold, then tap Done to start the next timer.','Done — start next timer','fold',true);}
+function confFold(){S.fd+=1;save();if(S.fd>=FC){banner('All folds done — time to bulk proof');toProof();}else{S.te=S.mt+(S.fd+1)*FMS;save();renderFolds();}}
+function toProof(){stopTick();S.stage='proof';S.ps=Date.now();S.pe=S.ps+S.pd*3600000;save();renderPL();renderProof();}
+function renderProof(){const tot=S.pe-(S.ps||Date.now());document.getElementById('mb').innerHTML='<div class="info-box"><p>Cover with plastic wrap. Place in a draft-free spot — inside the oven (light off) works great.</p></div><div class="card"><div class="card-title">Bulk proof</div><div class="card-sub">Ready when dough pulls away from the bowl cleanly and is not sticky.</div><div class="section-label">Duration</div><div class="duration-pick"><button class="dur-btn'+(S.pd===2?' selected':'')+'" onclick="setProofDur(2)">2 hr</button><button class="dur-btn'+(S.pd===3?' selected':'')+'" onclick="setProofDur(3)">3 hr</button><button class="dur-btn'+(S.pd===4?' selected':'')+'" onclick="setProofDur(4)">4 hr</button></div>'+rHTML('pR','pT','remaining')+'<button class="extend-btn" onclick="extProof()">+ 30 min — not ready yet</button></div><div class="btn-stack"><button class="btn btn-crust" onclick="toShape()">Dough is ready — go to shaping</button></div>';clearN();sched('Bulk proof timer','Check your dough — is it ready?',S.pe-Date.now());startTick(S.pe,()=>{beep();showOv('🫶','Bulk proof done','Check your dough — it should pull away from the bowl cleanly.','Ready — go to shaping','proof');},rem=>updR(rem,tot,'pR','pT'));}
+function setProofDur(h){S.pd=h;stopTick();S.ps=Date.now();S.pe=S.ps+h*3600000;save();renderProof();}
+function extProof(){stopTick();S.pe+=30*60*1000;save();banner('+30 min added');clearN();sched('Bulk proof timer','Check your dough — is it ready?',S.pe-Date.now());startTick(S.pe,()=>{beep();showOv('🫶','Bulk proof done','Check your dough — it should pull away from the bowl cleanly.','Ready — go to shaping','proof');},rem=>updR(rem,S.pe-(S.ps||Date.now()),'pR','pT'));}
+const SS=[{t:'Drop dough onto lightly floured surface',n:'Regular flour is fine here'},{t:'Pull into a rough rectangle',n:null},{t:'Fold left and right sides in (hotdog style)',n:null},{t:'Roll it up (hamburger style) and shape',n:'Watch a video — much easier to see than read!'}];
+function toShape(){stopTick();S.stage='shape';S.srd=false;S.sre=null;save();renderPL();renderShape();}
+function renderShape(){const b=document.getElementById('mb');const stepRows=SS.map((s,i)=>'<div class="step-row"><div class="step-num">'+(i+1)+'</div><div><div class="step-text">'+s.t+'</div>'+(s.n?'<div class="step-note">'+s.n+'</div>':'')+'</div></div>').join('');b.innerHTML='<div class="card"><div class="card-title">Shaping</div><div class="card-sub">Work through the steps, rest 20 min, then do a final reshape into the basket.</div><div class="steps-list">'+stepRows+'</div></div>'+(!S.srd?'<div class="btn-stack"><button class="btn btn-primary" onclick="startSR()">Done shaping — start 20 min rest</button></div>'+(S.sre?'<div class="card" style="margin-top:10px">'+rHTML('shR','shT','rest timer')+'</div>':''):'<div class="card"><div class="card-title" style="color:var(--sage)">Rest complete</div><div class="card-sub">Reshape your loaf, lightly flour your basket, place the dough in, and put in the fridge overnight.</div></div><div class="btn-stack"><button class="btn btn-crust" onclick="toBake()">In the fridge — go to bake day</button></div>');if(S.sre&&!S.srd)startTick(S.sre,()=>{beep();showOv('🫓','Rest complete','Reshape your loaf, flour your basket, and put it in the fridge overnight.','Done — into the fridge','sr');},rem=>updR(rem,SRM,'shR','shT'));}
+function startSR(){S.sre=Date.now()+SRM;save();sched('Shape rest done','Time to reshape and put in the basket.',SRM);renderShape();}
+function confSR(){S.srd=true;save();renderShape();}
+const BSTEPS=[{title:'Preheat oven to 475\u00b0F',detail:'Dutch oven goes in now — at least 20 min',timer:'20 min'},{title:'Score and bake with lid on',detail:'At least one big slash. Bake at 475\u00b0F.',timer:'20 min'},{title:'Remove lid, reduce to 450\u00b0F',detail:'Continue baking until deep golden crust.',timer:'12\u201315 min'},{title:'Cool before cutting',detail:'A few hours for best texture — if you can resist!',timer:null}];
+function toBake(){stopTick();S.stage='bake';S.bs=0;S.bte=null;save();renderPL();renderBake();}
+function renderBake(){const sm=S.bs===0?PHM:S.bs===1?LOM:S.lom*60000;document.getElementById('mb').innerHTML='<div class="info-box"><p>Bake anytime within 2 days, as long as the dough has been chilling for at least 12 hours.</p></div><div class="card"><div class="card-title">Bake</div>'+BSTEPS.map((step,i)=>'<div class="bake-step"><div class="bake-num '+(i<S.bs?'done-num':i===S.bs?'active-num':'')+'">'+(i+1)+'</div><div class="bake-info"><div class="bake-title" style="'+(i<S.bs?'color:var(--mid);text-decoration:line-through':'')+'">'+(step.title)+'</div><div class="bake-detail">'+step.detail+'</div></div>'+(step.timer?'<div class="bake-badge">'+step.timer+'</div>':'')+'</div>').join('')+'</div>'+(S.bte?'<div class="card">'+rHTML('bR','bT',(BSTEPS[S.bs]&&BSTEPS[S.bs].title||'').toLowerCase())+'</div>':'')+'<div class="btn-stack" id="bkBtns">'+getBB()+'</div>';if(S.bte)startTick(S.bte,onBTDone,rem=>updR(rem,sm,'bR','bT'));}
+function getBB(){if(S.bs===0&&!S.bte)return'<button class="btn btn-primary" onclick="startPH()">Start preheat timer</button>';if(S.bs===0&&S.bte)return'<button class="btn btn-ghost" disabled>Preheating\u2026</button>';if(S.bs===1&&!S.bte)return'<button class="btn btn-primary" onclick="startLidOn()">Loaf is in — start 20 min timer</button>';if(S.bs===1&&S.bte)return'<button class="btn btn-ghost" disabled>Baking with lid\u2026</button>';if(S.bs===2&&!S.bte)return'<div class="section-label">Lid-off duration</div><div class="duration-pick"><button class="dur-btn'+(S.lom===12?' selected':'')+'" onclick="setLO(12,event)">12 min</button><button class="dur-btn'+(S.lom===13?' selected':'')+'" onclick="setLO(13,event)">13 min</button><button class="dur-btn'+(S.lom===15?' selected':'')+'" onclick="setLO(15,event)">15 min</button></div><button class="btn btn-primary" onclick="startLidOff()">Lid off, temp down — start timer</button>';if(S.bs===2&&S.bte)return'<button class="btn btn-ghost" disabled>Baking without lid\u2026</button>';if(S.bs===3)return'<button class="btn btn-sage" onclick="newBake()">\uD83C\uDF5E Start new bake</button>';return'';}
+function startPH(){S.bte=Date.now()+PHM;save();sched('Oven preheated','Dutch oven ready — time to score and bake!',PHM);renderBake();}
+function onBTDone(){beep(2);if(S.bs===0)showOv('🔥','Oven is ready','Score your loaf and place it in the Dutch oven. At least one big slash!','Ready — start bake timer','ph');else if(S.bs===1)showOv('\u2668\uFE0F','Lid comes off','Reduce oven to 450\u00b0F and remove the lid to develop the crust.','Lid is off — start timer','lo');else if(S.bs===2)showOv('🍞','Bake complete!','Your loaf should be deep golden brown. Cool for a few hours before cutting.','Amazing!','lf');}
+function startLidOn(){S.bs=1;S.bte=Date.now()+LOM;save();sched('Time to remove lid','Reduce to 450\u00b0F and take the lid off.',LOM);renderBake();}
+function setLO(min,e){S.lom=min;save();document.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('selected'));if(e&&e.target)e.target.classList.add('selected');document.getElementById('bkBtns').innerHTML=getBB();}
+function startLidOff(){S.bs=2;const ms=S.lom*60000;S.bte=Date.now()+ms;save();sched('Bake complete!','Take your loaf out and let it cool.',ms);renderBake();}
+function bakeDone(){stopTick();S.bs=3;S.bte=null;save();renderBake();banner('Enjoy your loaf!',6000);}
+function doReset(){if(confirm('Reset and start a new bake?'))newBake();}
+function newBake(){stopTick();clearN();S={stage:'mix',scale:S.scale||1,fd:0,mt:null,te:null,pd:3,ps:null,pe:null,sre:null,srd:false,bs:0,bte:null,lom:13,ot:null};save();renderPL();render();}
+function render(){const st=S.stage;if(st==='mix')renderMix();else if(st==='folds'){if(S.te&&Date.now()>=S.te)onFoldDone();else renderFolds();}else if(st==='proof'){if(S.pe&&Date.now()>=S.pe)showOv('🫶','Bulk proof done','Check your dough — it should pull away from the bowl cleanly.','Ready — go to shaping','proof');else renderProof();}else if(st==='shape')renderShape();else if(st==='bake'){if(S.bte&&Date.now()>=S.bte)onBTDone();else renderBake();}else renderMix();}
+async function init(){await reqN();load();renderPL();render();}
+window.addEventListener('load',init);
 </script>
 </body>
 </html>
